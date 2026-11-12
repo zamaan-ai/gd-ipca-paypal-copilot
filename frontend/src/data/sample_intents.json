@@ -1,0 +1,177 @@
+[
+  {
+    "goal_id": "GOAL-HOM-8921",
+    "primary_objective": "Home Down Payment & Emergency Fund",
+    "raw_text": "I want to save $150,000 for a house down payment in 5 years while keeping $25,000 ready for emergency medical needs.",
+    "target_valuation": 150000.00,
+    "guaranteed_reserve": 25000.00,
+    "time_horizon_years": 5.0,
+    "risk_profile_index": 3.5,
+    "liquidity_constraint": "STRICT_RESERVE",
+    "confidence_threshold": 0.90,
+    "utility_function_params": {
+      "risk_aversion_gamma": 2.4,
+      "inflation_adjustment_rate": 0.028
+    },
+    "milestones": [
+      {
+        "year": 1,
+        "label": "Foundation Year",
+        "target_progress_pct": 18
+      },
+      {
+        "year": 3,
+        "label": "Midpoint Checkpoint",
+        "target_progress_pct": 55
+      },
+      {
+        "year": 5,
+        "label": "Down Payment Ready",
+        "target_progress_pct": 100
+      }
+    ],
+    "preferred_asset_classes": ["Equity", "Fixed Income", "Cash Equivalent"],
+    "excluded_assets": [],
+    "tax_status": "taxable_brokerage"
+  },
+  {
+    "goal_id": "GOAL-RET-4812",
+    "primary_objective": "Early Freedom / Semi-Retirement",
+    "raw_text": "I want to retire at age 48 with $1.2M liquid capital, ensuring low volatility 3 years prior to departure.",
+    "target_valuation": 1200000.00,
+    "guaranteed_reserve": 80000.00,
+    "time_horizon_years": 12.0,
+    "risk_profile_index": 4.2,
+    "liquidity_constraint": "FLEXIBLE_RESERVE",
+    "confidence_threshold": 0.85,
+    "utility_function_params": {
+      "risk_aversion_gamma": 1.8,
+      "inflation_adjustment_rate": 0.028
+    },
+    "milestones": [
+      {
+        "year": 4,
+        "label": "Acceleration Phase",
+        "target_progress_pct": 30
+      },
+      {
+        "year": 9,
+        "label": "Pre-Retirement De-Risk",
+        "target_progress_pct": 75
+      },
+      {
+        "year": 12,
+        "label": "Freedom Day",
+        "target_progress_pct": 100
+      }
+    ],
+    "preferred_asset_classes": ["Equity", "Fixed Income", "Alternatives"],
+    "excluded_assets": ["EQ-EM-001"],
+    "tax_status": "taxable_brokerage"
+  },
+  {
+    "goal_id": "GOAL-EDU-3340",
+    "primary_objective": "College Fund for Child",
+    "raw_text": "Build a $90,000 college fund in 8 years for my child. I can tolerate moderate ups and downs but want high confidence of reaching the target.",
+    "target_valuation": 90000.00,
+    "guaranteed_reserve": 10000.00,
+    "time_horizon_years": 8.0,
+    "risk_profile_index": 3.0,
+    "liquidity_constraint": "STRICT_RESERVE",
+    "confidence_threshold": 0.92,
+    "utility_function_params": {
+      "risk_aversion_gamma": 2.8,
+      "inflation_adjustment_rate": 0.032
+    },
+    "milestones": [
+      {
+        "year": 2,
+        "label": "Early Accumulation",
+        "target_progress_pct": 20
+      },
+      {
+        "year": 5,
+        "label": "Midpoint Review",
+        "target_progress_pct": 55
+      },
+      {
+        "year": 8,
+        "label": "Tuition Ready",
+        "target_progress_pct": 100
+      }
+    ],
+    "preferred_asset_classes": ["Equity", "Fixed Income", "Cash Equivalent"],
+    "excluded_assets": [],
+    "tax_status": "529_plan"
+  },
+  {
+    "goal_id": "GOAL-TRAV-1105",
+    "primary_objective": "Sabbatical / World Travel Fund",
+    "raw_text": "I want $45,000 available in 3 years for a 6-month sabbatical around the world. Keep risk low because the timeline is short.",
+    "target_valuation": 45000.00,
+    "guaranteed_reserve": 15000.00,
+    "time_horizon_years": 3.0,
+    "risk_profile_index": 2.2,
+    "liquidity_constraint": "STRICT_RESERVE",
+    "confidence_threshold": 0.95,
+    "utility_function_params": {
+      "risk_aversion_gamma": 3.5,
+      "inflation_adjustment_rate": 0.025
+    },
+    "milestones": [
+      {
+        "year": 1,
+        "label": "First Third",
+        "target_progress_pct": 30
+      },
+      {
+        "year": 2,
+        "label": "Two-Thirds Mark",
+        "target_progress_pct": 65
+      },
+      {
+        "year": 3,
+        "label": "Departure Ready",
+        "target_progress_pct": 100
+      }
+    ],
+    "preferred_asset_classes": ["Fixed Income", "Cash Equivalent", "Equity"],
+    "excluded_assets": ["EQ-EM-001", "EQ-US-003", "ALT-001"],
+    "tax_status": "taxable_brokerage"
+  },
+  {
+    "goal_id": "GOAL-WEALTH-7789",
+    "primary_objective": "Long-term Wealth Building",
+    "raw_text": "Grow $50,000 seed capital into at least $400,000 over 15 years. I can handle higher volatility for better growth.",
+    "target_valuation": 400000.00,
+    "guaranteed_reserve": 20000.00,
+    "time_horizon_years": 15.0,
+    "risk_profile_index": 5.5,
+    "liquidity_constraint": "FLEXIBLE_RESERVE",
+    "confidence_threshold": 0.80,
+    "utility_function_params": {
+      "risk_aversion_gamma": 1.2,
+      "inflation_adjustment_rate": 0.028
+    },
+    "milestones": [
+      {
+        "year": 5,
+        "label": "First Checkpoint",
+        "target_progress_pct": 25
+      },
+      {
+        "year": 10,
+        "label": "Halfway",
+        "target_progress_pct": 55
+      },
+      {
+        "year": 15,
+        "label": "Target Achieved",
+        "target_progress_pct": 100
+      }
+    ],
+    "preferred_asset_classes": ["Equity", "Alternatives"],
+    "excluded_assets": [],
+    "tax_status": "taxable_brokerage"
+  }
+]

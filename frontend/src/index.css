@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pink-50: #fdf2f8;
+  --color-pink-100: #fce7f3;
+  --color-pink-200: #fbcfe8;
+  --color-pink-300: #f9a8d4;
+  --color-pink-400: #f472b6;
+  --color-pink-500: #ec4899;
+  --color-pink-600: #db2777;
+
+  --color-violet-50: #f5f3ff;
+  --color-violet-100: #ede9fe;
+  --color-violet-200: #ddd6fe;
+  --color-violet-300: #c4b5fd;
+  --color-violet-400: #a78bfa;
+  --color-violet-500: #8b5cf6;
+  --color-violet-600: #7c3aed;
+  --color-violet-700: #6d28d9;
+  --color-violet-800: #5b21b6;
+  --color-violet-900: #4c1d95;
+  --color-violet-950: #2e1065;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #fdf2f8;
+  color: #2e1065;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Pink Ambient Mesh Background */
+.bg-ambient-mesh {
+  background-color: #fdf2f8;
+  background-image: 
+    radial-gradient(circle at 12% 15%, rgba(244, 114, 182, 0.40) 0%, transparent 48%),
+    radial-gradient(circle at 88% 18%, rgba(236, 72, 153, 0.30) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(249, 168, 212, 0.35) 0%, transparent 60%),
+    radial-gradient(circle at 82% 85%, rgba(244, 114, 182, 0.35) 0%, transparent 50%),
+    radial-gradient(circle at 18% 85%, rgba(217, 70, 239, 0.25) 0%, transparent 45%);
+  background-attachment: fixed;
+}
+
+/* LUXURY PINK FROSTED GLASS SURFACES WITH VIOLET SPECULARITY */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1.5px solid rgba(234, 179, 8, 0.65);
+  box-shadow: 
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.95),
+    0 14px 36px -10px rgba(124, 58, 237, 0.14),
+    0 0 16px -4px rgba(234, 179, 8, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: #facc15;
+  box-shadow: 
+    inset 0 1px 2px 0 rgba(255, 255, 255, 1),
+    0 20px 48px -12px rgba(124, 58, 237, 0.22),
+    0 0 26px -2px rgba(250, 204, 21, 0.55);
+  transform: translateY(-2px);
+}
+
+.glass-card-active {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 2.5px solid #eab308;
+  box-shadow: 
+    inset 0 1px 3px 0 rgba(255, 255, 255, 1),
+    0 0 24px -2px rgba(234, 179, 8, 0.50),
+    0 14px 32px -8px rgba(124, 58, 237, 0.20);
+}
+
+.glass-card-elevated {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(36px);
+  -webkit-backdrop-filter: blur(36px);
+  border: 2px solid rgba(234, 179, 8, 0.75);
+  box-shadow: 
+    inset 0 1px 2px 0 rgba(255, 255, 255, 1),
+    0 26px 54px -12px rgba(124, 58, 237, 0.20),
+    0 0 28px -4px rgba(234, 179, 8, 0.40);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.80);
+  backdrop-filter: blur(18px);
+  border: 1.5px solid rgba(234, 179, 8, 0.70);
+  color: #2e1065;
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  border-color: #eab308;
+  box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.28), 0 0 20px rgba(250, 204, 21, 0.40);
+  background: #ffffff;
+  outline: none;
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(234, 179, 8, 0.55);
+}
+
+/* Gradients */
+.gradient-violet {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #4c1d95 100%);
+}
+
+.gradient-pink-violet {
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+}
+
+/* Shimmer Button Effect */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 100%
+  );
+  transform: rotate(25deg);
+  transition: all 0.6s ease;
+}
+
+.btn-shimmer:hover::after {
+  left: 120%;
+}
+
+/* Ticker Marquee Animation */
+@keyframes tickerTape {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: tickerTape 35s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* Floating Pink Ambient Glow Orbs */
+@keyframes orbFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(25px, -18px) scale(1.10); }
+}
+
+.animate-orb {
+  animation: orbFloat 14s ease-in-out infinite;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #fdf2f8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.35);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed;
+}

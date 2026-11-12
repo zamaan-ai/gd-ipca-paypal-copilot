@@ -1,0 +1,192 @@
+{
+  "version": "1.0.0",
+  "as_of_date": "2026-11-01",
+  "currency": "USD",
+  "risk_free_rate_annual": 0.042,
+  "inflation_rate_annual": 0.028,
+  "simulation_defaults": {
+    "n_paths": 10000,
+    "time_step_years": 1.0,
+    "random_seed": 42,
+    "copula": "student_t",
+    "degrees_of_freedom": 5,
+    "regime_switching": true
+  },
+  "assets": {
+    "EQ-US-001": {
+      "symbol": "VTI",
+      "expected_return_annual": 0.085,
+      "volatility_annual": 0.165,
+      "skewness": -0.45,
+      "kurtosis": 4.2,
+      "dividend_yield": 0.014
+    },
+    "EQ-US-002": {
+      "symbol": "VOO",
+      "expected_return_annual": 0.082,
+      "volatility_annual": 0.155,
+      "skewness": -0.40,
+      "kurtosis": 3.9,
+      "dividend_yield": 0.013
+    },
+    "EQ-US-003": {
+      "symbol": "VB",
+      "expected_return_annual": 0.095,
+      "volatility_annual": 0.210,
+      "skewness": -0.55,
+      "kurtosis": 5.1,
+      "dividend_yield": 0.015
+    },
+    "EQ-INT-001": {
+      "symbol": "VXUS",
+      "expected_return_annual": 0.072,
+      "volatility_annual": 0.175,
+      "skewness": -0.50,
+      "kurtosis": 4.5,
+      "dividend_yield": 0.028
+    },
+    "EQ-INT-002": {
+      "symbol": "VEA",
+      "expected_return_annual": 0.068,
+      "volatility_annual": 0.165,
+      "skewness": -0.48,
+      "kurtosis": 4.3,
+      "dividend_yield": 0.030
+    },
+    "EQ-EM-001": {
+      "symbol": "VWO",
+      "expected_return_annual": 0.078,
+      "volatility_annual": 0.220,
+      "skewness": -0.70,
+      "kurtosis": 5.8,
+      "dividend_yield": 0.032
+    },
+    "FI-US-001": {
+      "symbol": "BND",
+      "expected_return_annual": 0.038,
+      "volatility_annual": 0.055,
+      "skewness": -0.15,
+      "kurtosis": 3.2,
+      "dividend_yield": 0.035
+    },
+    "FI-US-002": {
+      "symbol": "VCIT",
+      "expected_return_annual": 0.045,
+      "volatility_annual": 0.065,
+      "skewness": -0.25,
+      "kurtosis": 3.5,
+      "dividend_yield": 0.042
+    },
+    "FI-US-003": {
+      "symbol": "VTIP",
+      "expected_return_annual": 0.032,
+      "volatility_annual": 0.040,
+      "skewness": -0.10,
+      "kurtosis": 2.9,
+      "dividend_yield": 0.025
+    },
+    "FI-INT-001": {
+      "symbol": "BNDX",
+      "expected_return_annual": 0.035,
+      "volatility_annual": 0.050,
+      "skewness": -0.20,
+      "kurtosis": 3.1,
+      "dividend_yield": 0.030
+    },
+    "ALT-001": {
+      "symbol": "VNQ",
+      "expected_return_annual": 0.065,
+      "volatility_annual": 0.185,
+      "skewness": -0.60,
+      "kurtosis": 5.0,
+      "dividend_yield": 0.035
+    },
+    "ALT-002": {
+      "symbol": "GLD",
+      "expected_return_annual": 0.045,
+      "volatility_annual": 0.155,
+      "skewness": 0.20,
+      "kurtosis": 3.8,
+      "dividend_yield": 0.000
+    },
+    "CASH-001": {
+      "symbol": "BIL",
+      "expected_return_annual": 0.041,
+      "volatility_annual": 0.005,
+      "skewness": 0.05,
+      "kurtosis": 2.5,
+      "dividend_yield": 0.040
+    },
+    "CASH-002": {
+      "symbol": "SGOV",
+      "expected_return_annual": 0.042,
+      "volatility_annual": 0.004,
+      "skewness": 0.02,
+      "kurtosis": 2.4,
+      "dividend_yield": 0.041
+    },
+    "EQ-SEC-001": {
+      "symbol": "VGT",
+      "expected_return_annual": 0.110,
+      "volatility_annual": 0.220,
+      "skewness": -0.55,
+      "kurtosis": 4.8,
+      "dividend_yield": 0.007
+    },
+    "EQ-SEC-002": {
+      "symbol": "VHT",
+      "expected_return_annual": 0.080,
+      "volatility_annual": 0.145,
+      "skewness": -0.35,
+      "kurtosis": 3.7,
+      "dividend_yield": 0.012
+    }
+  },
+  "correlation_matrix": {
+    "assets_order": [
+      "EQ-US-001", "EQ-US-002", "EQ-US-003", "EQ-INT-001", "EQ-INT-002", "EQ-EM-001",
+      "FI-US-001", "FI-US-002", "FI-US-003", "FI-INT-001",
+      "ALT-001", "ALT-002", "CASH-001", "CASH-002", "EQ-SEC-001", "EQ-SEC-002"
+    ],
+    "matrix": [
+      [1.00, 0.98, 0.88, 0.82, 0.80, 0.75, 0.15, 0.20, 0.05, 0.10, 0.70, 0.10, 0.02, 0.02, 0.85, 0.75],
+      [0.98, 1.00, 0.85, 0.80, 0.78, 0.72, 0.12, 0.18, 0.03, 0.08, 0.68, 0.08, 0.01, 0.01, 0.90, 0.78],
+      [0.88, 0.85, 1.00, 0.78, 0.75, 0.80, 0.10, 0.15, 0.02, 0.05, 0.65, 0.12, 0.00, 0.00, 0.70, 0.65],
+      [0.82, 0.80, 0.78, 1.00, 0.95, 0.88, 0.18, 0.22, 0.08, 0.25, 0.60, 0.15, 0.03, 0.03, 0.65, 0.60],
+      [0.80, 0.78, 0.75, 0.95, 1.00, 0.82, 0.20, 0.24, 0.10, 0.28, 0.58, 0.12, 0.02, 0.02, 0.62, 0.58],
+      [0.75, 0.72, 0.80, 0.88, 0.82, 1.00, 0.12, 0.18, 0.05, 0.15, 0.55, 0.20, 0.01, 0.01, 0.58, 0.55],
+      [0.15, 0.12, 0.10, 0.18, 0.20, 0.12, 1.00, 0.85, 0.70, 0.75, 0.25, 0.05, 0.30, 0.28, 0.08, 0.10],
+      [0.20, 0.18, 0.15, 0.22, 0.24, 0.18, 0.85, 1.00, 0.65, 0.70, 0.30, 0.08, 0.25, 0.22, 0.12, 0.15],
+      [0.05, 0.03, 0.02, 0.08, 0.10, 0.05, 0.70, 0.65, 1.00, 0.55, 0.15, 0.15, 0.40, 0.38, 0.02, 0.05],
+      [0.10, 0.08, 0.05, 0.25, 0.28, 0.15, 0.75, 0.70, 0.55, 1.00, 0.20, 0.10, 0.20, 0.18, 0.05, 0.08],
+      [0.70, 0.68, 0.65, 0.60, 0.58, 0.55, 0.25, 0.30, 0.15, 0.20, 1.00, 0.25, 0.05, 0.05, 0.55, 0.50],
+      [0.10, 0.08, 0.12, 0.15, 0.12, 0.20, 0.05, 0.08, 0.15, 0.10, 0.25, 1.00, 0.02, 0.02, 0.05, 0.08],
+      [0.02, 0.01, 0.00, 0.03, 0.02, 0.01, 0.30, 0.25, 0.40, 0.20, 0.05, 0.02, 1.00, 0.98, 0.00, 0.01],
+      [0.02, 0.01, 0.00, 0.03, 0.02, 0.01, 0.28, 0.22, 0.38, 0.18, 0.05, 0.02, 0.98, 1.00, 0.00, 0.01],
+      [0.85, 0.90, 0.70, 0.65, 0.62, 0.58, 0.08, 0.12, 0.02, 0.05, 0.55, 0.05, 0.00, 0.00, 1.00, 0.70],
+      [0.75, 0.78, 0.65, 0.60, 0.58, 0.55, 0.10, 0.15, 0.05, 0.08, 0.50, 0.08, 0.01, 0.01, 0.70, 1.00]
+    ]
+  },
+  "regime_parameters": {
+    "normal": {
+      "probability": 0.70,
+      "return_multiplier": 1.0,
+      "vol_multiplier": 1.0
+    },
+    "bull": {
+      "probability": 0.15,
+      "return_multiplier": 1.35,
+      "vol_multiplier": 0.85
+    },
+    "bear": {
+      "probability": 0.10,
+      "return_multiplier": 0.45,
+      "vol_multiplier": 1.80
+    },
+    "crisis": {
+      "probability": 0.05,
+      "return_multiplier": -0.80,
+      "vol_multiplier": 2.50
+    }
+  }
+}

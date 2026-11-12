@@ -1,0 +1,24 @@
+{
+  "engine_version": "3.4.0-RELEASE",
+  "default_monte_carlo_runs": 10000,
+  "default_confidence_alpha": 0.95,
+  "max_drawdown_limit_default": 0.25,
+  "liquidity_reserve_enforcement": true,
+  "rebalance_trigger": "milestone_trajectory_deviation",
+  "semantic_projection": {
+    "enabled": true,
+    "jargon_terms_to_abstract": [
+      "Sharpe Ratio", "Beta", "Convexity", "Duration", "Drawdown",
+      "Volatility", "Alpha", "Covariance", "Mean-Variance", "Efficient Frontier"
+    ]
+  },
+  "supported_currencies": ["USD"],
+  "tax_lots_tracking": true,
+  "event_broker": "kafka",
+  "persistence": {
+    "intents": "postgresql",
+    "market_ticks": "timescaledb",
+    "session_state": "redis",
+    "embeddings": "qdrant"
+  }
+}

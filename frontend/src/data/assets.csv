@@ -1,0 +1,17 @@
+asset_id,symbol,name,asset_class,sub_class,currency,expense_ratio_bps,liquidity_score,min_trade_size,description
+EQ-US-001,VTI,Vanguard Total Stock Market ETF,Equity,US Broad Market,USD,3,9.8,1,Broad US equity exposure across large/mid/small cap
+EQ-US-002,VOO,Vanguard S&P 500 ETF,Equity,US Large Cap,USD,3,9.9,1,Large-cap US equity tracking S&P 500
+EQ-US-003,VB,Vanguard Small-Cap ETF,Equity,US Small Cap,USD,5,9.2,1,US small-cap equity exposure
+EQ-INT-001,VXUS,Vanguard Total International Stock ETF,Equity,International Developed+Emerging,USD,7,9.5,1,Total international equity excluding US
+EQ-INT-002,VEA,Vanguard FTSE Developed Markets ETF,Equity,International Developed,USD,5,9.4,1,Developed markets ex-US
+EQ-EM-001,VWO,Vanguard FTSE Emerging Markets ETF,Equity,Emerging Markets,USD,8,8.9,1,Emerging market equities
+FI-US-001,BND,Vanguard Total Bond Market ETF,Fixed Income,US Aggregate Bonds,USD,3,9.7,1,Broad US investment-grade bond market
+FI-US-002,VCIT,Vanguard Intermediate-Term Corporate Bond ETF,Fixed Income,US Corporate Intermediate,USD,4,9.3,1,Intermediate-term investment-grade corporate bonds
+FI-US-003,VTIP,Vanguard Short-Term Inflation-Protected Securities ETF,Fixed Income,TIPS Short,USD,4,9.1,1,Short-term TIPS for inflation protection
+FI-INT-001,BNDX,Vanguard Total International Bond ETF,Fixed Income,International Bonds,USD,7,8.8,1,International investment-grade bonds (hedged)
+ALT-001,VNQ,Vanguard Real Estate ETF,Alternatives,US REITs,USD,12,9.0,1,US real estate investment trusts
+ALT-002,GLD,SPDR Gold Shares,Alternatives,Commodities Gold,USD,40,9.6,1,Physical gold exposure
+CASH-001,BIL,SPDR Bloomberg 1-3 Month T-Bill ETF,Cash Equivalent,Treasury Bills,USD,14,10.0,1,Near-cash ultra-short Treasury bills
+CASH-002,SGOV,iShares 0-3 Month Treasury Bond ETF,Cash Equivalent,Treasury Bills,USD,7,10.0,1,0-3 month US Treasury exposure
+EQ-SEC-001,VGT,Vanguard Information Technology ETF,Equity,US Technology,USD,10,9.7,1,US technology sector
+EQ-SEC-002,VHT,Vanguard Health Care ETF,Equity,US Health Care,USD,10,9.5,1,US health care sector

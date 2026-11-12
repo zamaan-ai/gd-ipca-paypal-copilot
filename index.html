@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GD-IPCA™ Mark 2 · Goal-Driven Portfolio Execution</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+          },
+          colors: {
+            pink: {
+              50: '#fdf2f8',
+              100: '#fce7f3',
+              200: '#fbcfe8',
+              300: '#f9a8d4',
+              400: '#f472b6',
+              500: '#ec4899',
+              600: '#db2777',
+            },
+            violet: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+              950: '#2e1065',
+            },
+            yellow: {
+              300: '#fde047',
+              400: '#facc15',
+              500: '#eab308',
+              glow: '#ffe600',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #fdf2f8;
+      color: #2e1065;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 12% 15%, rgba(244, 114, 182, 0.45) 0%, transparent 48%),
+        radial-gradient(circle at 88% 18%, rgba(236, 72, 153, 0.35) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(249, 168, 212, 0.40) 0%, transparent 60%),
+        radial-gradient(circle at 82% 85%, rgba(244, 114, 182, 0.40) 0%, transparent 50%),
+        radial-gradient(circle at 18% 85%, rgba(217, 70, 239, 0.30) 0%, transparent 45%);
+      background-attachment: fixed;
+    }
+
+    /* Frosted Glass Surfaces */
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.70);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border: 1.5px solid rgba(234, 179, 8, 0.65);
+      box-shadow: 
+        inset 0 1px 2px 0 rgba(255, 255, 255, 0.95),
+        0 14px 36px -10px rgba(124, 58, 237, 0.14),
+        0 0 16px -4px rgba(234, 179, 8, 0.35);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      border-color: #facc15;
+      box-shadow: 
+        inset 0 1px 2px 0 rgba(255, 255, 255, 1),
+        0 20px 48px -12px rgba(124, 58, 237, 0.22),
+        0 0 26px -2px rgba(250, 204, 21, 0.55);
+      transform: translateY(-2px);
+    }
+
+    .glass-card-active {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border: 2.5px solid #eab308;
+      box-shadow: 
+        inset 0 1px 3px 0 rgba(255, 255, 255, 1),
+        0 0 24px -2px rgba(234, 179, 8, 0.50),
+        0 14px 32px -8px rgba(124, 58, 237, 0.20);
+    }
+
+    .glass-card-elevated {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(36px);
+      -webkit-backdrop-filter: blur(36px);
+      border: 2px solid rgba(234, 179, 8, 0.75);
+      box-shadow: 
+        inset 0 1px 2px 0 rgba(255, 255, 255, 1),
+        0 26px 54px -12px rgba(124, 58, 237, 0.20),
+        0 0 28px -4px rgba(234, 179, 8, 0.40);
+    }
+
+    .glass-input {
+      background: rgba(255, 255, 255, 0.80);
+      backdrop-filter: blur(18px);
+      border: 1.5px solid rgba(234, 179, 8, 0.70);
+      color: #2e1065;
+      transition: all 0.2s ease;
+    }
+
+    .glass-input:focus {
+      border-color: #eab308;
+      box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.28), 0 0 20px rgba(250, 204, 21, 0.40);
+      background: #ffffff;
+      outline: none;
+    }
+
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(234, 179, 8, 0.55);
+    }
+
+    /* Gradients */
+    .gradient-violet {
+      background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #4c1d95 100%);
+    }
+
+    .gradient-yellow {
+      background: linear-gradient(135deg, #fde047 0%, #facc15 50%, #eab308 100%);
+    }
+
+    /* Shimmer Button Effect */
+    .btn-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shimmer::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -60%;
+      width: 50%;
+      height: 200%;
+      background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.40) 50%, transparent 100%);
+      transform: rotate(25deg);
+      transition: all 0.6s ease;
+    }
+    .btn-shimmer:hover::after {
+      left: 120%;
+    }
+
+    /* Live Ticker Marquee */
+    @keyframes tickerTape {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-ticker {
+      display: inline-flex;
+      white-space: nowrap;
+      animation: tickerTape 35s linear infinite;
+    }
+    .animate-ticker:hover {
+      animation-play-state: paused;
+    }
+
+    /* Floating Ambient Orbs */
+    @keyframes orbFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(25px, -18px) scale(1.10); }
+    }
+    .animate-orb {
+      animation: orbFloat 14s ease-in-out infinite;
+    }
+
+    /* Custom Violet & Pink Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #fdf2f8;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #eab308;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #7c3aed;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans relative selection:bg-yellow-300 selection:text-violet-950">
+  <!-- Ambient Background -->
+  <div class="fixed top-0 left-1/4 w-[450px] h-[450px] bg-pink-400/35 rounded-full blur-3xl pointer-events-none animate-orb"></div>
+  <div class="fixed bottom-10 right-1/4 w-[400px] h-[400px] bg-fuchsia-400/30 rounded-full blur-3xl pointer-events-none animate-orb" style="animation-delay: -7s;"></div>
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 glass-card-elevated border-b-2 border-yellow-400">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <!-- Brand -->
+      <div class="flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl gradient-violet flex items-center justify-center shadow-md shadow-violet-500/25 border-2 border-yellow-400">
+          <svg class="w-5 h-5 text-yellow-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div class="flex flex-col justify-center">
+          <span class="text-lg font-black tracking-tight text-violet-950 font-mono leading-none">GD-IPCA™</span>
+          <p class="text-[11px] text-violet-800 font-bold tracking-tight mt-1 hidden sm:block leading-none">
+            Intent-to-Portfolio Compilation &amp; Stochastic Execution
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Center -->
+      <div class="flex items-center gap-4">
+        <!-- Mode Toggle (Quant vs Executive) -->
+        <button id="toggle-quant-btn" onclick="toggleQuantMode()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border-2 border-yellow-400 transition-all bg-white/80 text-violet-950 hover:bg-yellow-50 shadow-sm">
+          <svg class="w-3.5 h-3.5 text-violet-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line>
+            <line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line>
+            <line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line>
+          </svg>
+          <span id="quant-mode-label" class="hidden sm:inline">Executive View</span>
+        </button>
+
+        <!-- User Profile Avatar / Auth Trigger -->
+        <button onclick="openModal('auth')" title="Account &amp; Session" class="flex items-center gap-2.5 pl-3 border-l-2 border-yellow-400/80 hover:opacity-90 transition-opacity cursor-pointer">
+          <div id="user-avatar-initial" class="w-9 h-9 rounded-full gradient-violet flex items-center justify-center text-yellow-300 text-xs font-black font-mono shadow-sm border-2 border-yellow-400">
+            D
+          </div>
+          <div class="text-left hidden md:block">
+            <p id="user-display-name" class="text-xs font-bold text-violet-950 leading-tight">Demo Investor</p>
+            <p id="user-role-label" class="text-[10px] font-extrabold text-violet-700 uppercase tracking-wider">Institutional</p>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Market Ticker -->
+    <div class="bg-pink-100/90 backdrop-blur-md text-violet-950 py-1.5 px-6 text-xs border-t-2 border-b-2 border-yellow-400 overflow-hidden whitespace-nowrap flex items-center font-mono shadow-sm">
+      <div class="flex items-center gap-2 pr-6 border-r-2 border-yellow-400 shrink-0">
+        <span id="live-status-dot" class="w-2 h-2 rounded-full bg-violet-600 animate-ping"></span>
+        <span class="text-[10px] font-extrabold text-violet-950 uppercase tracking-widest">Live Markets</span>
+      </div>
+      <div class="overflow-hidden w-full ml-4">
+        <div id="live-ticker-track" class="animate-ticker flex items-center gap-8">
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">VTI</span><span class="text-violet-900 font-bold">$284.50</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">+0.84%</span><span class="text-[9px] text-violet-700 uppercase font-bold">US Equity</span></div>
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">VOO</span><span class="text-violet-900 font-bold">$542.10</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">+0.72%</span><span class="text-[9px] text-violet-700 uppercase font-bold">S&amp;P 500</span></div>
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">QQQ</span><span class="text-violet-900 font-bold">$518.30</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">+1.15%</span><span class="text-[9px] text-violet-700 uppercase font-bold">Tech</span></div>
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">VXUS</span><span class="text-violet-900 font-bold">$62.40</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">+0.31%</span><span class="text-[9px] text-violet-700 uppercase font-bold">Intl Equity</span></div>
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">BND</span><span class="text-violet-900 font-bold">$72.85</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-pink-200 text-pink-900 border border-pink-400">-0.12%</span><span class="text-[9px] text-violet-700 uppercase font-bold">US Aggregate</span></div>
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">SGOV</span><span class="text-violet-900 font-bold">$100.45</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">+0.04%</span><span class="text-[9px] text-violet-700 uppercase font-bold">0-3M T-Bills</span></div>
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">GLD</span><span class="text-violet-900 font-bold">$248.90</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">+0.65%</span><span class="text-[9px] text-violet-700 uppercase font-bold">Gold</span></div>
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">VGT</span><span class="text-violet-900 font-bold">$614.20</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">+1.32%</span><span class="text-[9px] text-violet-700 uppercase font-bold">Info Tech</span></div>
+          <!-- Repeat -->
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">VTI</span><span class="text-violet-900 font-bold">$284.50</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">+0.84%</span><span class="text-[9px] text-violet-700 uppercase font-bold">US Equity</span></div>
+          <div class="inline-flex items-center gap-2"><span class="font-extrabold text-violet-950">VOO</span><span class="text-violet-900 font-bold">$542.10</span><span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">+0.72%</span><span class="text-[9px] text-violet-700 uppercase font-bold">S&amp;P 500</span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard -->
+  <main class="max-w-7xl mx-auto px-6 py-8 w-full flex-1 space-y-6">
+    <!-- Notification Toast -->
+    <div id="toast-banner" class="hidden p-4 glass-card rounded-2xl border-2 border-yellow-400 bg-white/95 text-violet-950 text-xs flex items-center justify-between shadow-lg">
+      <span id="toast-text" class="font-extrabold flex items-center gap-2 text-violet-950">
+        <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+        Intent AST successfully synthesized and validated.
+      </span>
+      <button onclick="hideToast()" class="text-violet-700 hover:text-violet-950 font-black ml-4 uppercase tracking-wider text-[11px]">Dismiss</button>
+    </div>
+
+    <!-- KPI Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] font-bold text-violet-800 uppercase tracking-widest">Target Goal Capital</p>
+          <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-yellow-100 text-violet-950 border border-yellow-400 shadow-sm">BENCHMARK</span>
+        </div>
+        <p id="kpi-target-val" class="text-3xl font-extrabold font-mono tracking-tight mt-2.5 text-violet-950">$150,000</p>
+        <p id="kpi-target-sub" class="text-xs text-violet-800 mt-1.5 font-semibold">5 Years Investment Horizon</p>
+      </div>
+
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] font-bold text-violet-800 uppercase tracking-widest">Success Probability</p>
+          <span id="kpi-success-badge" class="text-[10px] font-mono font-extrabold px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-900 border border-violet-400 shadow-sm">OPTIMAL</span>
+        </div>
+        <p id="kpi-success-prob" class="text-3xl font-black font-mono tracking-tight mt-2.5 text-violet-700">94.2%</p>
+        <p id="kpi-success-sub" class="text-xs text-violet-800 mt-1.5 font-semibold">SLA Target &ge; 90.0% Minimum</p>
+      </div>
+
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] font-bold text-violet-800 uppercase tracking-widest">Ring-Fenced Reserve</p>
+          <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-yellow-100 text-violet-950 border border-yellow-400 shadow-sm">FIDUCIARY</span>
+        </div>
+        <p id="kpi-reserve-val" class="text-3xl font-extrabold font-mono tracking-tight mt-2.5 text-violet-900">$25,000</p>
+        <p class="text-xs text-violet-800 mt-1.5 font-semibold">Lock-Box Protected in T-Bills</p>
+      </div>
+
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] font-bold text-violet-800 uppercase tracking-widest">Projected Median Wealth</p>
+          <span class="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-900 border border-violet-400 shadow-sm">5,000 PATHS</span>
+        </div>
+        <p id="kpi-projected-val" class="text-3xl font-extrabold font-mono tracking-tight mt-2.5 text-violet-800">$184,650</p>
+        <p id="kpi-projected-sub" class="text-xs text-violet-800 mt-1.5 font-semibold">Expected Exp: 8.4% | Vol: 11.2%</p>
+      </div>
+    </div>
+
+    <!-- Subsystem Tabs -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 glass-card rounded-2xl p-2 border-2 border-yellow-400 shadow-md">
+      <div class="flex items-center gap-1.5 overflow-x-auto py-1">
+        <button onclick="switchTab('compiler')" id="tab-btn-compiler" class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap glass-card-active text-violet-950 shadow-md border-2 border-yellow-500">
+          Goal Compiler &amp; AST
+        </button>
+        <button onclick="switchTab('montecarlo')" id="tab-btn-montecarlo" class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap text-violet-800 hover:text-violet-950 hover:bg-yellow-100/60">
+          Monte Carlo Engine
+        </button>
+        <button onclick="switchTab('portfolio')" id="tab-btn-portfolio" class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap text-violet-800 hover:text-violet-950 hover:bg-yellow-100/60">
+          Holdings &amp; Valuation
+          <span id="tab-portfolio-badge" class="ml-1 text-[10px] px-2 py-0.5 rounded-full bg-yellow-200 text-violet-950 font-mono font-black border border-yellow-400">$185,420</span>
+        </button>
+        <button onclick="switchTab('rebalance')" id="tab-btn-rebalance" class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap text-violet-800 hover:text-violet-950 hover:bg-yellow-100/60">
+          Rebalance &amp; Drift
+        </button>
+        <button onclick="switchTab('ledger')" id="tab-btn-ledger" class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap text-violet-800 hover:text-violet-950 hover:bg-yellow-100/60">
+          Audit Ledger
+          <span id="tab-ledger-badge" class="ml-1 text-[10px] px-2 py-0.5 rounded-full bg-yellow-200 text-violet-950 font-mono font-black border border-yellow-400">5</span>
+        </button>
+        <button onclick="switchTab('copilot')" id="tab-btn-copilot" class="tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap text-violet-800 hover:text-violet-950 hover:bg-yellow-100/60">
+          PayPal AI Copilot
+          <span class="ml-1 text-[10px] px-2 py-0.5 rounded-full bg-yellow-200 text-violet-950 font-mono font-black border border-yellow-400">AGENTIC</span>
+        </button>
+      </div>
+
+      <!-- Broker Order Action -->
+      <button onclick="openModal('trade')" class="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black gradient-violet text-yellow-300 shadow-lg shadow-violet-500/30 hover:opacity-95 transition-all btn-shimmer uppercase tracking-wider border-2 border-yellow-400">
+        <svg class="w-3.5 h-3.5 text-yellow-300" viewBox="0 0 24 24" fill="currentColor">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        Direct Broker Order
+      </button>
+    </div>
+
+    <!-- Goal Compiler Tab -->
+    <div id="tab-content-compiler" class="tab-panel space-y-6">
+      <!-- Canonical Goal Intent Presets -->
+      <div>
+        <div class="flex items-baseline justify-between mb-3">
+          <h2 class="text-xs font-extrabold uppercase tracking-widest text-violet-900 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-violet-800"></span>
+            Canonical Goal Intent Presets
+          </h2>
+          <span class="text-xs font-mono font-bold text-violet-800">SPEC-GDIPCA 3.4.0 Certified</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5" id="presets-grid"></div>
+      </div>
+
+      <!-- Natural Language Semantic Parser Console -->
+      <div class="glass-card rounded-2xl p-6 relative">
+        <label class="text-xs font-extrabold uppercase tracking-widest text-violet-950 block mb-3 flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-violet-800"></span>
+          Natural Language Semantic Intent Parser
+        </label>
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <input type="text" id="custom-prompt-input" class="w-full text-sm px-4 py-3.5 rounded-xl glass-input placeholder:text-violet-500 font-semibold" placeholder="Describe your financial goal in plain English..." />
+          <button onclick="compileIntentAction()" class="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl gradient-violet text-yellow-300 font-black text-sm shadow-lg shadow-violet-500/30 hover:opacity-95 transition-all shrink-0 btn-shimmer border-2 border-yellow-400">
+            Compile Intent AST
+          </button>
+        </div>
+      </div>
+
+      <!-- 2-Column Split: AST Console & Milestone Progression -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: Compiled AST & Roadmap -->
+        <div class="lg:col-span-5 space-y-5">
+          <div class="glass-card rounded-2xl p-5 font-mono">
+            <div class="flex justify-between items-center pb-3 mb-3 border-b-2 border-yellow-400/60">
+              <span class="text-xs font-black text-violet-950 flex items-center gap-2">
+                <span>&bull;</span> Deterministic Intent AST
+              </span>
+              <button onclick="copyAST()" id="copy-ast-btn" class="text-[10px] text-violet-900 font-bold hover:text-black px-2.5 py-1 rounded-lg glass-pill">Copy AST</button>
+            </div>
+            <pre id="ast-json-view" class="text-xs text-violet-950 overflow-x-auto leading-relaxed max-h-80 custom-scroll font-mono p-1 font-bold"></pre>
+          </div>
+
+          <div class="glass-card rounded-2xl p-5">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-violet-950 mb-4 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-violet-800"></span>
+              Milestone Progression Checkpoints
+            </h3>
+            <div id="milestones-container" class="space-y-3.5"></div>
+          </div>
+        </div>
+
+        <!-- Right: Fiduciary Summary & Allocation Breakdown -->
+        <div class="lg:col-span-7 space-y-5">
+          <div class="glass-card rounded-2xl p-6">
+            <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-yellow-400/60">
+              <span id="explanation-heading" class="text-xs font-black uppercase tracking-wider text-violet-950">Fiduciary Executive Summary</span>
+              <span class="text-[10px] font-mono font-black text-violet-950 bg-yellow-200 px-2.5 py-1 rounded-full border border-yellow-400">CONFIRMED SLA</span>
+            </div>
+            <div id="fiduciary-summary-body" class="text-sm text-violet-950 space-y-4 leading-relaxed font-sans font-semibold"></div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h4 class="text-xs font-black uppercase tracking-wider text-violet-950">Strategic Asset Breakdown</h4>
+              <span class="text-xs font-mono text-violet-900 font-black">100% Fully Allocated</span>
+            </div>
+            <div id="allocation-chips-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monte Carlo Tab -->
+    <div id="tab-content-montecarlo" class="tab-panel hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h3 class="text-base font-extrabold text-violet-950 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-violet-800"></span>
+              Stochastic Monte Carlo Trajectories (Percentile Dispersion)
+            </h3>
+            <p class="text-xs text-violet-800 mt-1 font-semibold">Correlated Geometric Brownian Motion · 4-State Markov Regime Switches</p>
+          </div>
+          <span class="text-xs font-mono font-black text-violet-950 bg-yellow-200 px-3 py-1.5 rounded-xl border-2 border-yellow-400 shadow-sm">5,000 Paths Vectorized</span>
+        </div>
+
+        <!-- Fan Chart -->
+        <div id="mc-svg-container" class="w-full bg-white/85 rounded-xl p-4 border-2 border-yellow-400 shadow-inner">
+          <svg id="mc-fan-svg" viewBox="0 0 800 320" class="w-full h-80" preserveAspectRatio="none"></svg>
+        </div>
+
+        <!-- Legend indicator -->
+        <div class="flex items-center justify-center gap-6 mt-4 text-xs font-mono font-bold">
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-yellow-400 border border-yellow-600 shadow-sm"></span><span class="text-violet-950">P90 Bullish Sky</span></div>
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-violet-800 shadow-sm"></span><span class="text-violet-950 font-black">Median Expected (P50)</span></div>
+          <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-purple-400"></span><span class="text-violet-900">P10 Bearish Floor</span></div>
+          <div class="flex items-center gap-2"><span class="w-4 h-1 bg-yellow-500"></span><span class="text-yellow-700 font-black">Goal Target Line</span></div>
+        </div>
+      </div>
+
+      <!-- Regime Switching & Asset Breakdown -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass-card rounded-2xl p-6">
+          <h4 class="text-xs font-extrabold uppercase tracking-widest text-violet-950 mb-4 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-violet-800"></span>
+            Strategic Allocation Donut
+          </h4>
+          <div class="flex items-center justify-center py-6">
+            <div id="mc-donut-ring" class="relative w-48 h-48 rounded-full flex items-center justify-center shadow-lg border-2 border-yellow-400" style="background: conic-gradient(#7c3aed 0% 34%, #a78bfa 34% 50%, #facc15 50% 76%, #fde047 76% 86%, #ec4899 86% 96%, #fbcfe8 96% 100%); mask: radial-gradient(farthest-side, transparent calc(100% - 24px), #000 calc(100% - 24px)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 24px), #000 calc(100% - 24px));">
+            </div>
+          </div>
+          <div class="text-center">
+            <span id="mc-donut-summary" class="text-xs font-mono font-black text-violet-950">60% Growth Equities · 40% Defensives &amp; T-Bills</span>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 font-mono text-xs space-y-3.5">
+          <h4 class="text-xs font-extrabold uppercase tracking-widest text-violet-950 font-sans flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-violet-800"></span>
+            Regime Switching Calibration Matrix
+          </h4>
+          <div class="space-y-2.5 pt-1 text-violet-950 font-bold">
+            <div class="flex justify-between items-center py-2 border-b-2 border-yellow-400/40">
+              <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-violet-600"></span>Regime 1: Normal Expansion (62%)</span>
+              <span class="font-black text-violet-950">&mu; = 1.00x, &sigma; = 1.00x</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b-2 border-yellow-400/40">
+              <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-yellow-500"></span>Regime 2: Bull Euphoria (18%)</span>
+              <span class="font-black text-yellow-700">&mu; = 1.45x, &sigma; = 0.85x</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b-2 border-yellow-400/40">
+              <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Regime 3: Bear Correction (14%)</span>
+              <span class="font-black text-amber-800">&mu; = -0.60x, &sigma; = 1.80x</span>
+            </div>
+            <div class="flex justify-between items-center py-2">
+              <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-rose-500"></span>Regime 4: Liquidity Crisis (6%)</span>
+              <span class="font-black text-rose-700">&mu; = -1.90x, &sigma; = 2.80x (Fat Tail)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Portfolio Holdings Tab -->
+    <div id="tab-content-portfolio" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="glass-card rounded-2xl p-5">
+          <p class="text-[11px] font-bold text-violet-800 uppercase tracking-widest">Portfolio Valuation</p>
+          <p id="port-total-val" class="text-3xl font-extrabold font-mono tracking-tight text-violet-950 mt-1.5">$185,420</p>
+          <p class="text-xs text-violet-700 mt-1 font-semibold">Primary Goal Portfolio</p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5 flex flex-col justify-between">
+          <div>
+            <p class="text-[11px] font-bold text-violet-800 uppercase tracking-widest">Available Cash</p>
+            <p id="port-cash-val" class="text-2xl font-extrabold font-mono tracking-tight text-violet-950 mt-1.5">$38,200</p>
+          </div>
+          <div class="flex items-center gap-2 mt-4 pt-3 border-t-2 border-yellow-400/40">
+            <button onclick="openCashModal('deposit')" class="flex-1 py-1.5 rounded-lg gradient-violet text-yellow-300 text-xs font-black hover:opacity-95 border border-yellow-400 shadow-sm">+ Deposit</button>
+            <button onclick="openCashModal('withdraw')" class="flex-1 py-1.5 rounded-lg glass-pill text-violet-950 text-xs font-black hover:bg-yellow-100">- Withdraw</button>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5">
+          <p class="text-[11px] font-bold text-violet-800 uppercase tracking-widest">Guaranteed Reserve</p>
+          <p id="port-reserve-val" class="text-3xl font-extrabold font-mono tracking-tight text-violet-950 mt-1.5">$25,000</p>
+          <p class="text-xs text-violet-700 mt-1 font-semibold">Protected Liquidity Floor</p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5">
+          <p class="text-[11px] font-bold text-violet-800 uppercase tracking-widest">Target Equity / Bond</p>
+          <p id="port-target-ratio" class="text-3xl font-extrabold font-mono tracking-tight text-violet-700 mt-1.5">60% / 40%</p>
+          <p class="text-xs text-violet-700 mt-1 font-semibold">Strategic Asset Benchmark</p>
+        </div>
+      </div>
+
+      <!-- Holdings Table -->
+      <div class="glass-card rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-5">
+          <h3 class="text-xs font-extrabold uppercase tracking-widest text-violet-950 flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-violet-800"></span>
+            Active Investment Holdings
+          </h3>
+          <span id="holdings-count-badge" class="text-xs font-mono font-black text-violet-900 bg-yellow-200 px-2.5 py-0.5 rounded-full border border-yellow-400">5 Positions Active</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-mono">
+            <thead>
+              <tr class="border-b-2 border-yellow-400/60 text-violet-900 uppercase text-[10px]">
+                <th class="pb-3 font-black">Ticker</th>
+                <th class="pb-3 font-black">Asset Class</th>
+                <th class="pb-3 font-black text-right">Shares</th>
+                <th class="pb-3 font-black text-right">Cost Basis</th>
+                <th class="pb-3 font-black text-right">Market Price</th>
+                <th class="pb-3 font-black text-right">Market Value</th>
+                <th class="pb-3 font-black text-right">Weight</th>
+              </tr>
+            </thead>
+            <tbody id="holdings-table-body" class="divide-y divide-yellow-200 text-violet-950 font-bold"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rebalance Tab -->
+    <div id="tab-content-rebalance" class="tab-panel hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
+          <div>
+            <h3 class="text-base font-extrabold text-violet-950 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-violet-800"></span>
+              Milestone Rebalancing &amp; Asset Drift Control
+            </h3>
+            <p class="text-xs text-violet-800 mt-1 font-semibold">Automated multi-asset rebalancing against target risk weights with plain-English client explanations.</p>
+          </div>
+          <div class="flex items-center gap-2.5 shrink-0">
+            <button onclick="runRebalance(false)" class="px-4 py-2.5 rounded-xl glass-pill text-violet-950 font-black text-xs hover:bg-yellow-100 uppercase tracking-wider border-2 border-yellow-400">
+              Preview Drift
+            </button>
+            <button onclick="runRebalance(true)" class="px-5 py-2.5 rounded-xl gradient-violet text-yellow-300 font-black text-xs hover:opacity-95 shadow-lg shadow-violet-500/25 btn-shimmer uppercase tracking-wider border-2 border-yellow-400">
+              Execute Rebalance Trades
+            </button>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl glass-card border-2 border-yellow-400 bg-white/90 text-violet-950 space-y-2 mb-6 shadow-md">
+          <p class="text-[10px] uppercase font-black text-violet-900 tracking-wider">Fiduciary Plain-English Milestone Update</p>
+          <p id="reb-explanation-text" class="text-sm text-violet-950 leading-relaxed font-semibold">
+            Select "Preview Drift" or "Execute Rebalance Trades" to evaluate live allocation drift against your target equity/bond benchmark.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          <div class="glass-card rounded-xl p-4">
+            <p class="text-[11px] text-violet-800 font-bold uppercase">Max Drift Detected</p>
+            <p id="reb-drift-val" class="text-2xl font-black font-mono text-pink-700 mt-1">2.8%</p>
+          </div>
+          <div class="glass-card rounded-xl p-4">
+            <p class="text-[11px] text-violet-800 font-bold uppercase">Target Equity</p>
+            <p id="reb-target-eq" class="text-2xl font-black font-mono text-violet-950 mt-1">60.0%</p>
+          </div>
+          <div class="glass-card rounded-xl p-4">
+            <p class="text-[11px] text-violet-800 font-bold uppercase">Target Fixed-Income</p>
+            <p id="reb-target-fi" class="text-2xl font-black font-mono text-violet-950 mt-1">40.0%</p>
+          </div>
+          <div class="glass-card rounded-xl p-4">
+            <p class="text-[11px] text-violet-800 font-bold uppercase">Status</p>
+            <p id="reb-status-val" class="text-2xl font-black font-mono text-violet-700 mt-1">PREVIEW</p>
+          </div>
+        </div>
+
+        <!-- Proposed Rebalance Order List -->
+        <div id="reb-orders-list" class="space-y-3"></div>
+      </div>
+    </div>
+
+    <!-- Audit Ledger Tab -->
+    <div id="tab-content-ledger" class="tab-panel hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6">
+        <div class="flex justify-between items-center mb-5 pb-3 border-b-2 border-yellow-400/60">
+          <div>
+            <h3 class="text-xs font-extrabold uppercase tracking-widest text-violet-950">Immutable Transaction Ledger</h3>
+            <p class="text-xs text-violet-800 mt-1 font-semibold">SHA-256 Verified · Broker Orders and Synchronized Cash Flows</p>
+          </div>
+          <span id="ledger-count-badge" class="text-xs font-mono font-black text-violet-950 bg-yellow-200 px-3 py-1 rounded-full border border-yellow-400">5 Verified Records</span>
+        </div>
+
+        <div id="ledger-list" class="divide-y divide-yellow-200 font-mono text-xs font-bold"></div>
+      </div>
+    </div>
+
+    <!-- PayPal Copilot Tab -->
+    <div id="tab-content-copilot" class="tab-panel hidden space-y-6">
+      <!-- Agent Console Header -->
+      <div class="glass-card rounded-2xl p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+          <div>
+            <h3 class="text-base font-extrabold text-violet-950 flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 border border-violet-800"></span>
+              PayPal AI Wealth Copilot &amp; Agentic Commerce
+            </h3>
+            <p class="text-xs text-violet-800 mt-1 font-semibold">
+              Autonomous goal-gap analysis, reserve protection, and human-in-the-loop PayPal Orders v2 &amp; Payouts v1 settlement.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <span id="copilot-ai-badge" class="text-[10px] font-mono font-black px-2.5 py-1 rounded-full bg-violet-100 text-violet-950 border border-violet-400">AI ENGINE</span>
+            <span id="copilot-pp-badge" class="text-[10px] font-mono font-black px-2.5 py-1 rounded-full bg-yellow-200 text-violet-950 border border-yellow-400">PAYPAL SANDBOX</span>
+          </div>
+        </div>
+
+        <!-- Prompt Bar -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <input type="text" id="copilot-prompt-input" value="Fund $5,000 via PayPal to boost my Home Down Payment goal readiness" class="w-full text-sm px-4 py-3.5 rounded-xl glass-input placeholder:text-violet-500 font-semibold" placeholder="Ask the AI Copilot to fund a goal, trigger a PayPal payout, or rebalance..." />
+          <button onclick="planAgentAction()" class="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl gradient-violet text-yellow-300 font-black text-sm shadow-lg shadow-violet-500/30 hover:opacity-95 transition-all shrink-0 btn-shimmer border-2 border-yellow-400">
+            Plan PayPal Action
+          </button>
+        </div>
+
+        <!-- Quick Prompts -->
+        <div class="flex flex-wrap items-center gap-2 mt-3">
+          <span class="text-[10px] font-black uppercase tracking-wider text-violet-800">Quick Prompts:</span>
+          <button onclick="setCopilotPrompt('Fund $5,000 via PayPal to boost my Home Down Payment goal readiness')" class="text-[11px] font-bold px-3 py-1 rounded-full glass-pill text-violet-950 hover:bg-yellow-100">Fund $5k via PayPal</button>
+          <button onclick="setCopilotPrompt('Disburse $2,000 surplus via PayPal Payout to demo-buyer@personal.example.com')" class="text-[11px] font-bold px-3 py-1 rounded-full glass-pill text-violet-950 hover:bg-yellow-100">Payout $2k to PayPal</button>
+          <button onclick="setCopilotPrompt('Check portfolio drift and rebalance holdings safely')" class="text-[11px] font-bold px-3 py-1 rounded-full glass-pill text-violet-950 hover:bg-yellow-100">Rebalance Drift</button>
+        </div>
+      </div>
+
+      <!-- 2-Column Plan & Authorization -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left: AI Reasoning & Tool Schema -->
+        <div class="lg:col-span-7 space-y-5">
+          <div class="glass-card rounded-2xl p-6 space-y-4">
+            <div class="flex justify-between items-center pb-3 border-b-2 border-yellow-400/60">
+              <span class="text-xs font-black uppercase tracking-wider text-violet-950">Agentic Reasoning &amp; Safeguards</span>
+              <span id="copilot-safeguard-pill" class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full bg-yellow-200 text-violet-950 border border-yellow-400">RESERVE VERIFIED</span>
+            </div>
+            <p id="copilot-reasoning-text" class="text-sm text-violet-950 font-semibold leading-relaxed">
+              Click <strong>Plan PayPal Action</strong> to evaluate your Goal AST, Monte Carlo success probability, and execute PayPal Agent Toolkit reasoning.
+            </p>
+            <div class="p-3.5 rounded-xl bg-white/85 border border-yellow-400 text-xs space-y-1">
+              <p class="font-black text-violet-900 uppercase text-[10px] tracking-wider">Fiduciary Safeguard &amp; Impact</p>
+              <p id="copilot-safeguard-note" class="text-violet-950 font-semibold">Emergency reserve remains strictly locked in Treasury Bills.</p>
+              <p id="copilot-impact-note" class="text-violet-800 font-bold"></p>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-5 font-mono">
+            <div class="flex justify-between items-center pb-3 mb-3 border-b-2 border-yellow-400/60">
+              <span class="text-xs font-black text-violet-950">&bull; PayPal Agent Toolkit Call</span>
+              <span id="copilot-tool-name" class="text-[10px] font-black px-2 py-0.5 rounded-lg glass-pill text-violet-950">create_paypal_funding_order</span>
+            </div>
+            <pre id="copilot-tool-json" class="text-xs text-violet-950 overflow-x-auto leading-relaxed max-h-56 font-mono font-bold">{
+  "tool": "create_paypal_funding_order",
+  "arguments": {
+    "amount": 5000,
+    "goal_id": "GOAL-HOM-8921"
+  }
+}</pre>
+          </div>
+        </div>
+
+        <!-- Right: 1-Click PayPal Execution Card -->
+        <div class="lg:col-span-5 space-y-5">
+          <div class="glass-card-elevated rounded-2xl p-6 space-y-4 border-2 border-yellow-400">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-black uppercase tracking-wider text-violet-950">Human-in-the-Loop PayPal Settlement</h4>
+              <span id="copilot-action-type-badge" class="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full bg-violet-100 text-violet-950 border border-violet-400">PAYPAL_FUNDING</span>
+            </div>
+            <div>
+              <label class="text-xs font-black text-violet-950 block mb-1">Settlement Amount (USD)</label>
+              <input type="number" id="copilot-exec-amount" value="5000" min="1" step="any" class="w-full text-lg font-black font-mono px-3.5 py-2.5 rounded-xl glass-input" />
+            </div>
+            <div id="copilot-email-wrap" class="hidden">
+              <label class="text-xs font-black text-violet-950 block mb-1">Recipient PayPal Email</label>
+              <input type="email" id="copilot-exec-email" value="demo-buyer@personal.example.com" class="w-full text-xs font-mono font-bold px-3.5 py-2.5 rounded-xl glass-input" />
+            </div>
+            <button onclick="executeCopilotAction()" id="copilot-exec-btn" class="w-full py-3.5 rounded-xl gradient-violet text-yellow-300 font-black text-xs shadow-lg shadow-violet-500/30 btn-shimmer uppercase tracking-wider border-2 border-yellow-400">
+              Authorize &amp; Execute via PayPal
+            </button>
+
+            <!-- Pending Live Sandbox Approval Container -->
+            <div id="copilot-pending-box" class="hidden p-4 rounded-xl bg-yellow-100/90 border-2 border-yellow-400 space-y-2.5 text-xs">
+              <p class="font-black text-violet-950">PayPal Sandbox Order Created (<span id="copilot-pending-id" class="font-mono"></span>)</p>
+              <p class="text-violet-800 font-semibold">Approve in PayPal Sandbox, then click Capture to credit your portfolio ledger.</p>
+              <div class="flex gap-2">
+                <a id="copilot-approve-link" href="#" target="_blank" rel="noopener" class="flex-1 text-center py-2 rounded-lg glass-pill font-black text-violet-950 hover:bg-white">Open PayPal Checkout</a>
+                <button onclick="capturePendingOrder()" class="flex-1 py-2 rounded-lg gradient-violet text-yellow-300 font-black border border-yellow-400">Capture Order</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PayPal Settlement History -->
+          <div class="glass-card rounded-2xl p-5">
+            <div class="flex justify-between items-center mb-3 pb-2 border-b-2 border-yellow-400/50">
+              <h4 class="text-xs font-black uppercase tracking-wider text-violet-950">PayPal Settlement History</h4>
+              <span id="paypal-records-count" class="text-[10px] font-mono font-black px-2 py-0.5 rounded-full bg-yellow-200 text-violet-950 border border-yellow-400">0</span>
+            </div>
+            <div id="paypal-records-list" class="space-y-2.5 max-h-60 overflow-y-auto text-xs font-mono">
+              <p class="text-violet-700 font-sans text-center py-4">No PayPal settlements yet. Execute an order or payout above.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="glass-card-elevated border-t-2 border-yellow-400 py-5 text-violet-900 text-xs mt-12">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+      <div class="flex items-center gap-2 font-mono">
+        <span class="font-black text-violet-950 font-sans tracking-tight">GD-IPCA™ Mark 2</span>
+        <span class="text-yellow-600 font-bold">·</span>
+        <span class="font-bold text-violet-900">16 Core Investable ETFs</span>
+        <span class="text-yellow-600 font-bold">·</span>
+        <span class="font-bold text-violet-800">Goal-Driven Execution</span>
+      </div>
+      <div class="text-xs font-bold text-violet-900">
+        Institutional Asset Allocation &amp; Portfolio Optimization Engine
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modals -->
+  <!-- Cash Modal -->
+  <div id="cash-modal" class="hidden fixed inset-0 z-50 bg-violet-950/45 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card-elevated rounded-3xl p-7 max-w-sm w-full shadow-2xl border-2 border-yellow-400">
+      <h3 id="cash-modal-title" class="text-lg font-black text-violet-950 mb-1 capitalize">Deposit Cash</h3>
+      <p id="cash-modal-desc" class="text-xs text-violet-800 mb-4 leading-relaxed font-semibold">Credit cash to your active portfolio balance.</p>
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" id="cash-rail-paypal" onclick="setCashRail('paypal')" class="py-2 rounded-xl text-xs font-black gradient-violet text-yellow-300 border-2 border-yellow-400 shadow-sm">PayPal Sandbox</button>
+          <button type="button" id="cash-rail-direct" onclick="setCashRail('direct')" class="py-2 rounded-xl text-xs font-black glass-pill text-violet-950 hover:bg-yellow-100">Direct Ledger</button>
+        </div>
+        <div id="cash-paypal-email-wrap" class="hidden">
+          <label class="text-xs font-black text-violet-950 block mb-1">Recipient PayPal Email</label>
+          <input type="email" id="cash-paypal-email" value="demo-buyer@personal.example.com" class="w-full text-xs font-mono font-bold px-3.5 py-2 rounded-xl glass-input" />
+        </div>
+        <input type="number" id="cash-modal-amount" value="10000" class="w-full text-lg font-black font-mono px-3.5 py-2.5 rounded-xl glass-input" />
+        <div class="flex gap-2">
+          <button onclick="setCashPreset(5000)" class="flex-1 py-1.5 rounded-lg glass-pill text-[11px] font-mono font-bold text-violet-950 hover:bg-yellow-200">+$5k</button>
+          <button onclick="setCashPreset(10000)" class="flex-1 py-1.5 rounded-lg glass-pill text-[11px] font-mono font-bold text-violet-950 hover:bg-yellow-200">+$10k</button>
+          <button onclick="setCashPreset(25000)" class="flex-1 py-1.5 rounded-lg glass-pill text-[11px] font-mono font-bold text-violet-950 hover:bg-yellow-200">+$25k</button>
+          <button onclick="setCashPreset(50000)" class="flex-1 py-1.5 rounded-lg glass-pill text-[11px] font-mono font-bold text-violet-950 hover:bg-yellow-200">+$50k</button>
+        </div>
+        <div class="flex gap-2.5 pt-2">
+          <button id="cash-confirm-btn" onclick="confirmCashAction()" class="flex-1 py-3 rounded-xl gradient-violet text-yellow-300 font-black text-xs shadow-lg shadow-violet-500/25 btn-shimmer uppercase tracking-wider border-2 border-yellow-400">Confirm via PayPal</button>
+          <button onclick="closeModal('cash')" class="px-4 py-3 rounded-xl glass-pill text-violet-950 font-black text-xs hover:bg-white">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trade Modal -->
+  <div id="trade-modal" class="hidden fixed inset-0 z-50 bg-violet-950/45 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card-elevated rounded-3xl p-7 max-w-sm w-full shadow-2xl border-2 border-yellow-400">
+      <h3 class="text-lg font-black text-violet-950 mb-1">Direct Broker Order Placement</h3>
+      <p class="text-xs text-violet-800 mb-5 leading-relaxed font-semibold">Execute live market trades directly through the matching engine.</p>
+      <div class="space-y-4">
+        <div>
+          <label class="text-xs font-black text-violet-950 block mb-1.5">Order Side</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" id="trade-side-buy" onclick="setTradeSide('BUY')" class="py-2 rounded-xl text-xs font-black gradient-violet text-yellow-300 border-2 border-yellow-400 shadow-sm">BUY</button>
+            <button type="button" id="trade-side-sell" onclick="setTradeSide('SELL')" class="py-2 rounded-xl text-xs font-black glass-pill text-violet-950 hover:bg-yellow-100">SELL</button>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-black text-violet-950 block mb-1">Asset Symbol</label>
+          <select id="trade-symbol-select" onchange="updateTradeEstimate()" class="w-full text-xs font-mono font-bold px-3.5 py-2.5 rounded-xl glass-input">
+            <option value="VTI" class="bg-white text-violet-950">VTI · Vanguard Total Stock Market</option>
+            <option value="VOO" class="bg-white text-violet-950">VOO · Vanguard S&amp;P 500</option>
+            <option value="VB" class="bg-white text-violet-950">VB · Vanguard Small-Cap</option>
+            <option value="VXUS" class="bg-white text-violet-950">VXUS · Total International Stock</option>
+            <option value="VEA" class="bg-white text-violet-950">VEA · FTSE Developed Markets</option>
+            <option value="VWO" class="bg-white text-violet-950">VWO · FTSE Emerging Markets</option>
+            <option value="BND" class="bg-white text-violet-950">BND · Total Bond Market</option>
+            <option value="VCIT" class="bg-white text-violet-950">VCIT · Intermediate Corp Bond</option>
+            <option value="VTIP" class="bg-white text-violet-950">VTIP · Short-Term TIPS</option>
+            <option value="BNDX" class="bg-white text-violet-950">BNDX · Total Intl Bond</option>
+            <option value="VNQ" class="bg-white text-violet-950">VNQ · Real Estate ETF</option>
+            <option value="GLD" class="bg-white text-violet-950">GLD · SPDR Gold Shares</option>
+            <option value="BIL" class="bg-white text-violet-950">BIL · 1-3 Month T-Bill</option>
+            <option value="SGOV" class="bg-white text-violet-950">SGOV · 0-3 Month Treasury</option>
+            <option value="VGT" class="bg-white text-violet-950">VGT · Information Technology</option>
+            <option value="VHT" class="bg-white text-violet-950">VHT · Health Care ETF</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-black text-violet-950 block mb-1">Shares</label>
+          <input type="number" id="trade-shares-input" value="10" min="0.01" step="any" oninput="updateTradeEstimate()" class="w-full text-sm font-mono font-bold px-3.5 py-2.5 rounded-xl glass-input" />
+        </div>
+        <div class="p-3 rounded-xl bg-pink-50/90 border border-yellow-400 flex justify-between items-center text-xs font-mono">
+          <span class="text-violet-800 font-bold">Est. Order Value</span>
+          <span id="trade-est-total" class="font-black text-violet-950">$1,566</span>
+        </div>
+        <div class="flex gap-2.5 pt-1">
+          <button onclick="submitTradeOrder()" class="flex-1 py-3 rounded-xl gradient-violet text-yellow-300 font-black text-xs shadow-lg shadow-violet-500/25 btn-shimmer uppercase tracking-wider border-2 border-yellow-400">Submit Order</button>
+          <button onclick="closeModal('trade')" class="px-4 py-3 rounded-xl glass-pill text-violet-950 font-black text-xs hover:bg-white">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth / Session Modal -->
+  <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-violet-950/45 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card-elevated rounded-3xl p-7 max-w-sm w-full shadow-2xl border-2 border-yellow-400">
+      <div class="flex items-center justify-between mb-1">
+        <h3 id="auth-modal-title" class="text-lg font-black text-violet-950">Investor Session</h3>
+        <span id="auth-conn-pill" class="text-[10px] font-mono font-black px-2 py-0.5 rounded-full bg-yellow-100 text-violet-950 border border-yellow-400">CONNECTED</span>
+      </div>
+      <p id="auth-modal-subtitle" class="text-xs text-violet-800 mb-5 font-semibold">Authenticate with your GD-IPCA account to persist portfolios and ledger entries.</p>
+
+      <div id="auth-signed-in-panel" class="hidden space-y-4">
+        <div class="p-4 rounded-2xl bg-pink-50/90 border-2 border-yellow-400 text-xs space-y-1.5">
+          <p class="font-black text-violet-950 text-sm" id="auth-active-name">Demo Investor</p>
+          <p class="font-mono font-bold text-violet-800" id="auth-active-email">demo@gdipca.io</p>
+          <p class="text-[10px] uppercase font-extrabold text-violet-700 tracking-wider" id="auth-active-role">Role: user</p>
+        </div>
+        <div class="flex gap-2.5">
+          <button onclick="logoutSession()" class="flex-1 py-2.5 rounded-xl bg-pink-100 text-pink-900 border-2 border-pink-400 font-black text-xs hover:bg-pink-200 uppercase tracking-wider">Sign Out</button>
+          <button onclick="closeModal('auth')" class="px-4 py-2.5 rounded-xl glass-pill text-violet-950 font-black text-xs hover:bg-white">Close</button>
+        </div>
+      </div>
+
+      <form id="auth-form" onsubmit="submitAuthForm(event)" class="space-y-3.5">
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" id="auth-tab-login" onclick="setAuthMode('login')" class="py-1.5 rounded-xl text-xs font-black gradient-violet text-yellow-300 border border-yellow-400">Sign In</button>
+          <button type="button" id="auth-tab-register" onclick="setAuthMode('register')" class="py-1.5 rounded-xl text-xs font-black glass-pill text-violet-950">Register</button>
+        </div>
+        <div id="auth-name-wrap" class="hidden">
+          <label class="text-xs font-black text-violet-950 block mb-1">Display Name</label>
+          <input type="text" id="auth-name-input" placeholder="Investor Name" class="w-full text-xs font-semibold px-3.5 py-2.5 rounded-xl glass-input" />
+        </div>
+        <div>
+          <label class="text-xs font-black text-violet-950 block mb-1">Email</label>
+          <input type="email" id="auth-email-input" value="demo@gdipca.io" required class="w-full text-xs font-mono font-bold px-3.5 py-2.5 rounded-xl glass-input" />
+        </div>
+        <div>
+          <label class="text-xs font-black text-violet-950 block mb-1">Password</label>
+          <input type="password" id="auth-password-input" value="Demo12345!" required class="w-full text-xs font-mono font-bold px-3.5 py-2.5 rounded-xl glass-input" />
+        </div>
+        <div class="flex gap-2.5 pt-1">
+          <button type="submit" id="auth-submit-btn" class="flex-1 py-3 rounded-xl gradient-violet text-yellow-300 font-black text-xs shadow-lg btn-shimmer uppercase tracking-wider border-2 border-yellow-400">Sign In</button>
+          <button type="button" onclick="closeModal('auth')" class="px-4 py-3 rounded-xl glass-pill text-violet-950 font-black text-xs hover:bg-white">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Application State & API Controller -->
+  <script>
+    const API_BASE = window.location.protocol === 'file:'
+      ? 'http://127.0.0.1:8000'
+      : `http://${window.location.hostname || '127.0.0.1'}:8000`;
+    const TOKEN_KEY = 'gdipca_auth_token';
+
+    const FALLBACK_INTENTS = [
+      {
+        goal_id: 'GOAL-HOM-8921',
+        primary_objective: 'Home Down Payment Reserve',
+        target_valuation: 150000,
+        guaranteed_reserve: 25000,
+        time_horizon_years: 5,
+        risk_profile_index: 3.5,
+        confidence_threshold: 0.92,
+        raw_text: 'I want to accumulate $150,000 for a residential real estate down payment in 5 years, maintaining a $25,000 emergency liquid reserve in T-Bills.',
+        milestones: [
+          { year: 1, label: 'Capital Foundation Stage', target_progress_pct: 22 },
+          { year: 3, label: 'Mid-Horizon Acceleration', target_progress_pct: 60 },
+          { year: 5, label: 'Escrow Down Payment Ready', target_progress_pct: 100 }
+        ]
+      },
+      {
+        goal_id: 'GOAL-RET-4812',
+        primary_objective: 'Executive Financial Freedom',
+        target_valuation: 1200000,
+        guaranteed_reserve: 80000,
+        time_horizon_years: 12,
+        risk_profile_index: 4.8,
+        confidence_threshold: 0.90,
+        raw_text: 'Achieve $1.2M liquid portfolio in 12 years for financial independence with $80,000 quarantined reserve.',
+        milestones: [
+          { year: 3, label: 'Compounding Base', target_progress_pct: 25 },
+          { year: 7, label: 'Inflection Milestone', target_progress_pct: 58 },
+          { year: 12, label: 'Freedom Departure', target_progress_pct: 100 }
+        ]
+      },
+      {
+        goal_id: 'GOAL-EDU-3340',
+        primary_objective: 'Ivy League College Tuition',
+        target_valuation: 220000,
+        guaranteed_reserve: 30000,
+        time_horizon_years: 8,
+        risk_profile_index: 3.2,
+        confidence_threshold: 0.95,
+        raw_text: 'Fund $220,000 for university tuition in 8 years with zero volatility risk 18 months before matriculation.',
+        milestones: [
+          { year: 2, label: 'Initial 529 Seed', target_progress_pct: 28 },
+          { year: 5, label: 'Secondary School Check', target_progress_pct: 65 },
+          { year: 8, label: 'Full Tuition Ring-Fenced', target_progress_pct: 100 }
+        ]
+      },
+      {
+        goal_id: 'GOAL-TRAV-1105',
+        primary_objective: 'Global Sabbatical Journey',
+        target_valuation: 65000,
+        guaranteed_reserve: 15000,
+        time_horizon_years: 3,
+        risk_profile_index: 2.4,
+        confidence_threshold: 0.94,
+        raw_text: 'Save $65,000 over 3 years for an international travel sabbatical, preserving $15k buffer.',
+        milestones: [
+          { year: 1, label: 'Travel Fund Seed', target_progress_pct: 35 },
+          { year: 2, label: 'Flight & Lodging Hedge', target_progress_pct: 70 },
+          { year: 3, label: 'Departure Ready', target_progress_pct: 100 }
+        ]
+      },
+      {
+        goal_id: 'GOAL-WEALTH-7789',
+        primary_objective: 'Generational Endowment Fund',
+        target_valuation: 600000,
+        guaranteed_reserve: 40000,
+        time_horizon_years: 15,
+        risk_profile_index: 6.2,
+        confidence_threshold: 0.88,
+        raw_text: 'Build $600,000 multi-decade generational wealth foundation with disciplined equity bias.',
+        milestones: [
+          { year: 4, label: 'Core Equity Base', target_progress_pct: 28 },
+          { year: 9, label: 'Mid-Decade Scale', target_progress_pct: 60 },
+          { year: 15, label: 'Endowment Established', target_progress_pct: 100 }
+        ]
+      }
+    ];
+
+    const FALLBACK_HOLDINGS = [
+      { symbol: 'VTI', asset_name: 'Vanguard Total Stock Market ETF', asset_class: 'US_EQUITY', quantity: 240, cost_basis: 260.4, current_price: 284.5, market_value: 68280, allocation_pct: 0.3682 },
+      { symbol: 'VXUS', asset_name: 'Vanguard Total International Stock ETF', asset_class: 'INTL_EQUITY', quantity: 480, cost_basis: 58.2, current_price: 62.4, market_value: 29952, allocation_pct: 0.1615 },
+      { symbol: 'BND', asset_name: 'Vanguard Total Bond Market ETF', asset_class: 'US_BONDS', quantity: 520, cost_basis: 73.1, current_price: 72.85, market_value: 37882, allocation_pct: 0.2043 },
+      { symbol: 'SGOV', asset_name: 'iShares 0-3 Month Treasury Bond ETF', asset_class: 'CASH', quantity: 250, cost_basis: 100.2, current_price: 100.45, market_value: 25112, allocation_pct: 0.1354 },
+      { symbol: 'GLD', asset_name: 'SPDR Gold Shares', asset_class: 'ALTERNATIVES', quantity: 96, cost_basis: 232.0, current_price: 248.9, market_value: 23894, allocation_pct: 0.1289 }
+    ];
+
+    const FALLBACK_TRANSACTIONS = [
+      { type: 'DEPOSIT', symbol: null, amount: 100000, plain_english_note: 'Initial Institutional Seed Capital Allocation', timestamp: '2026-11-08T09:30:15' },
+      { type: 'BUY', symbol: 'VTI', amount: 68280, plain_english_note: 'Executed 240 shares @ $284.50', timestamp: '2026-11-08T10:15:42' },
+      { type: 'BUY', symbol: 'BND', amount: 37882, plain_english_note: 'Executed 520 shares @ $72.85', timestamp: '2026-11-08T10:16:04' },
+      { type: 'BUY', symbol: 'SGOV', amount: 25112, plain_english_note: 'Executed 250 shares @ $100.45 (Reserve Floor)', timestamp: '2026-11-08T10:18:22' },
+      { type: 'REBALANCE', symbol: null, amount: 8400, plain_english_note: 'Quarterly Drift Rebalancing Order Execution', timestamp: '2026-11-10T14:22:00' }
+    ];
+
+    const FALLBACK_PRICES = {
+      VTI: 156.61, VOO: 145.07, VB: 113.83, VXUS: 178.40,
+      VEA: 207.40, VWO: 199.15, BND: 122.06, VCIT: 126.43,
+      VTIP: 122.47, BNDX: 130.77, VNQ: 106.75, GLD: 146.21,
+      BIL: 124.64, SGOV: 124.58, VGT: 137.91, VHT: 161.44
+    };
+
+    const state = {
+      backendOnline: false,
+      token: null,
+      user: null,
+      authMode: 'login',
+      presets: [...FALLBACK_INTENTS],
+      selectedIdx: 0,
+      activeGoal: { ...FALLBACK_INTENTS[0] },
+      sim: null,
+      portfolio: {
+        id: null,
+        total_valuation: 185420,
+        cash_balance: 38200,
+        emergency_reserve: 25000,
+        target_equity_pct: 0.60,
+        target_bond_pct: 0.40,
+        holdings: [...FALLBACK_HOLDINGS]
+      },
+      transactions: [...FALLBACK_TRANSACTIONS],
+      rebalance: null,
+      universeQuotes: [],
+      isQuant: false,
+      activeCashAction: 'deposit',
+      cashRail: 'paypal',
+      tradeSide: 'BUY',
+      agentPlan: null,
+      pendingPayPalOrder: null,
+      paypalRecords: [],
+      paypalMode: 'sandbox_simulation',
+      aiProvider: 'deterministic_quant_engine'
+    };
+
+    function fmt(n) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(Number(n) || 0);
+    }
+
+    function fmtDec(n) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(n) || 0);
+    }
+
+    function getToken() {
+      try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
+    }
+
+    function setToken(tok) {
+      state.token = tok;
+      try {
+        if (tok) localStorage.setItem(TOKEN_KEY, tok);
+        else localStorage.removeItem(TOKEN_KEY);
+      } catch {}
+    }
+
+    async function apiRequest(path, options = {}) {
+      const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+      if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
+      const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+      if (!res.ok) {
+        let msg = res.statusText;
+        try {
+          const err = await res.json();
+          msg = err.detail || err.message || JSON.stringify(err);
+        } catch {}
+        throw new Error(msg);
+      }
+      return res.json();
+    }
+
+    function localMonteCarlo(goal) {
+      const years = Math.max(1, Math.ceil(goal.time_horizon_years || 5));
+      const start = Math.max((goal.target_valuation || 150000) * 0.12, (goal.guaranteed_reserve || 25000) * 1.25);
+      const contrib = Math.max(0, ((goal.target_valuation || 150000) - start) / years * 0.88);
+      const risk = Math.max(0, Math.min(10, goal.risk_profile_index || 3.5)) / 10;
+      const eqW = Math.min(0.85, Math.max(0.15, 0.20 + risk * 0.65));
+      const bondW = 1 - eqW;
+      const mu = eqW * 0.088 + bondW * 0.042;
+      const sig = Math.sqrt(Math.pow(eqW * 0.16, 2) + Math.pow(bondW * 0.05, 2));
+      const trajectory = [];
+      let med = start;
+      for (let t = 0; t <= years; t++) {
+        if (t > 0) med = med * (1 + mu) + contrib;
+        const spread = sig * Math.sqrt(Math.max(1, t));
+        trajectory.push({
+          year: t,
+          p10: Math.round(med * Math.exp(-1.28 * spread)),
+          median: Math.round(med),
+          p90: Math.round(med * Math.exp(1.28 * spread)),
+          target: goal.target_valuation
+        });
+      }
+      const prob = Math.min(0.98, Math.max(0.45, med / Math.max(1, goal.target_valuation) * 0.82));
+      return {
+        trajectory_percentiles: trajectory,
+        success_probability: prob,
+        median_final_value: trajectory[trajectory.length - 1].median,
+        suggested_allocation: {
+          us_equity: +(eqW * 0.55).toFixed(3),
+          intl_equity: +(eqW * 0.25).toFixed(3),
+          us_bonds: +(bondW * 0.50).toFixed(3),
+          tips: +(bondW * 0.20).toFixed(3),
+          cash: +(bondW * 0.30).toFixed(3),
+          alternatives: +(eqW * 0.20).toFixed(3)
+        },
+        equity_weight: +eqW.toFixed(3),
+        bond_weight: +bondW.toFixed(3),
+        port_mu: +mu.toFixed(4),
+        port_sigma: +sig.toFixed(4)
+      };
+    }
+
+    async function runSimulationForGoal(goal) {
+      if (state.backendOnline) {
+        try {
+          const simRes = await apiRequest('/api/v1/simulate/monte-carlo', {
+            method: 'POST',
+            body: JSON.stringify({
+              ast_id: goal.goal_id,
+              runs: 5000,
+              time_horizon_years: goal.time_horizon_years,
+              target_valuation: goal.target_valuation,
+              risk_profile_index: goal.risk_profile_index,
+              guaranteed_reserve: goal.guaranteed_reserve,
+              confidence_threshold: goal.confidence_threshold || 0.90
+            })
+          });
+          state.sim = simRes;
+          renderSimulation();
+          return;
+        } catch (err) {
+          console.warn('API simulation fallback:', err.message);
+        }
+      }
+      state.sim = localMonteCarlo(goal);
+      renderSimulation();
+    }
+
+    function renderTicker() {
+      const track = document.getElementById('live-ticker-track');
+      if (!track) return;
+      const items = state.universeQuotes.length > 0
+        ? state.universeQuotes
+        : [
+            { symbol: 'VTI', price: 156.61, asset_class: 'US_EQUITY' },
+            { symbol: 'VOO', price: 145.07, asset_class: 'US_EQUITY' },
+            { symbol: 'VXUS', price: 178.40, asset_class: 'INTL_EQUITY' },
+            { symbol: 'BND', price: 122.06, asset_class: 'US_BONDS' },
+            { symbol: 'SGOV', price: 124.58, asset_class: 'CASH' },
+            { symbol: 'GLD', price: 146.21, asset_class: 'ALTERNATIVES' },
+            { symbol: 'VGT', price: 137.91, asset_class: 'US_EQUITY' },
+            { symbol: 'VTIP', price: 122.47, asset_class: 'TIPS' }
+          ];
+      const doubled = [...items, ...items];
+      track.innerHTML = doubled.map(q => {
+        const cls = (q.asset_class || '').replace('_', ' ');
+        return `
+          <div class="inline-flex items-center gap-2">
+            <span class="font-extrabold text-violet-950">${q.symbol}</span>
+            <span class="text-violet-900 font-bold">${fmtDec(q.price)}</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded font-extrabold bg-yellow-200 text-violet-950 border border-yellow-400">${q.source === 'yahoo_live' ? 'LIVE' : 'SYNC'}</span>
+            <span class="text-[9px] text-violet-700 uppercase font-bold">${cls}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderPresets() {
+      const grid = document.getElementById('presets-grid');
+      grid.innerHTML = state.presets.map((g, idx) => `
+        <button onclick="selectGoal(${idx})" class="text-left rounded-2xl p-4 transition-all border-2 relative overflow-hidden ${
+          state.selectedIdx === idx
+            ? 'glass-card-active border-yellow-500 shadow-lg shadow-yellow-400/30'
+            : 'glass-card hover:border-yellow-400'
+        }">
+          <div class="flex items-center justify-between mb-3">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold font-mono text-sm ${
+              state.selectedIdx === idx ? 'gradient-violet text-yellow-300 shadow-md border border-yellow-400' : 'bg-yellow-100 text-violet-950 border border-yellow-400'
+            }">${idx + 1}</div>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-yellow-100 text-violet-950 border border-yellow-400">${g.time_horizon_years}Y Horizon</span>
+          </div>
+          <p class="font-bold text-violet-950 text-sm leading-snug line-clamp-1">${g.primary_objective}</p>
+          <p class="text-sm font-mono font-extrabold text-violet-900 mt-2">${fmt(g.target_valuation)}</p>
+          <p class="text-[11px] text-violet-800 font-semibold mt-1">Reserve: ${fmt(g.guaranteed_reserve)}</p>
+        </button>
+      `).join('');
+    }
+
+    function renderGoalDetails() {
+      const g = state.activeGoal;
+      document.getElementById('kpi-target-val').innerText = fmt(g.target_valuation);
+      document.getElementById('kpi-target-sub').innerText = `${g.time_horizon_years} Years Investment Horizon`;
+      document.getElementById('kpi-reserve-val').innerText = fmt(g.guaranteed_reserve);
+      document.getElementById('custom-prompt-input').value = g.raw_text || '';
+      document.getElementById('ast-json-view').innerText = JSON.stringify(g, null, 2);
+
+      const milestones = g.milestones || [];
+      document.getElementById('milestones-container').innerHTML = milestones.map(m => `
+        <div class="flex items-center gap-3">
+          <span class="w-7 h-7 rounded-lg gradient-violet text-yellow-300 font-bold font-mono text-xs flex items-center justify-center shrink-0 shadow-sm border border-yellow-400">Y${m.year}</span>
+          <div class="flex-1">
+            <div class="flex justify-between text-xs font-semibold text-violet-950 mb-1.5">
+              <span>${m.label}</span>
+              <span class="font-mono text-violet-900 font-extrabold">${m.target_progress_pct}%</span>
+            </div>
+            <div class="h-2 rounded-full bg-pink-100 overflow-hidden border border-yellow-400">
+              <div class="h-full rounded-full bg-gradient-to-r from-yellow-400 via-amber-400 to-violet-600" style="width: ${m.target_progress_pct}%"></div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      renderExplanationBody();
+    }
+
+    function renderExplanationBody() {
+      const g = state.activeGoal;
+      const sim = state.sim;
+      const medianFinal = sim ? sim.median_final_value : Math.round(g.target_valuation * 1.23);
+      const muPct = sim ? (sim.port_mu * 100).toFixed(1) + '%' : '8.4%';
+      const sigPct = sim ? (sim.port_sigma * 100).toFixed(1) + '%' : '11.2%';
+      const eqPct = sim ? Math.round(sim.equity_weight * 100) : 60;
+      const bondPct = sim ? Math.round(sim.bond_weight * 100) : 40;
+
+      const fBody = document.getElementById('fiduciary-summary-body');
+      if (state.isQuant) {
+        fBody.innerHTML = `
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono font-bold">
+            <div class="p-4 glass-card rounded-xl">
+              <p class="text-violet-800 text-[11px]">Expected Return (&mu;)</p>
+              <p class="text-xl font-black text-violet-950 mt-1">${muPct}</p>
+              <p class="text-[10px] text-violet-700 mt-1">Annualized Drift</p>
+            </div>
+            <div class="p-4 glass-card rounded-xl">
+              <p class="text-violet-800 text-[11px]">Portfolio Volatility (&sigma;)</p>
+              <p class="text-xl font-black text-violet-950 mt-1">${sigPct}</p>
+              <p class="text-[10px] text-violet-700 mt-1">1-Year Standard Dev</p>
+            </div>
+            <div class="p-4 glass-card rounded-xl">
+              <p class="text-violet-800 text-[11px]">Equity / Fixed-Income</p>
+              <p class="text-xl font-black text-violet-950 mt-1">${eqPct}% / ${bondPct}%</p>
+              <p class="text-[10px] text-violet-700 mt-1">Strategic Weight Ratio</p>
+            </div>
+          </div>
+        `;
+      } else {
+        fBody.innerHTML = `
+          <p>
+            To achieve your goal of <strong class="text-violet-950">${fmt(g.target_valuation)}</strong> in <strong class="text-violet-900 font-extrabold">${g.time_horizon_years} years</strong>, the stochastic compilation model forecasts a median wealth projection of <strong class="text-violet-800 font-black">${fmt(medianFinal)}</strong>.
+          </p>
+          <div class="p-4 rounded-xl glass-card border-2 border-yellow-400 bg-white/90 text-xs text-violet-950 font-semibold shadow-sm">
+            Your ${fmt(g.guaranteed_reserve)} emergency reserve is ring-fenced strictly in Treasury Bills (SGOV) and is never exposed to drawdown risk.
+          </div>
+        `;
+      }
+    }
+
+    function renderSimulation() {
+      const sim = state.sim;
+      if (!sim) return;
+
+      const probPct = (sim.success_probability * 100).toFixed(1) + '%';
+      document.getElementById('kpi-success-prob').innerText = probPct;
+      document.getElementById('kpi-success-badge').innerText = sim.success_probability >= (state.activeGoal.confidence_threshold || 0.9) ? 'OPTIMAL' : 'REVIEW';
+      document.getElementById('kpi-projected-val').innerText = fmt(sim.median_final_value);
+      document.getElementById('kpi-projected-sub').innerText = `Expected Exp: ${(sim.port_mu * 100).toFixed(1)}% | Vol: ${(sim.port_sigma * 100).toFixed(1)}%`;
+
+      // Allocation Chips
+      const alloc = sim.suggested_allocation || {};
+      const chipsData = [
+        { name: 'US Equity (VTI/VOO)', value: Math.round((alloc.us_equity || 0.34) * 100) + '%', fill: '#7c3aed', raw: (alloc.us_equity || 0.34) * 100 },
+        { name: 'International (VXUS)', value: Math.round((alloc.intl_equity || 0.16) * 100) + '%', fill: '#a78bfa', raw: (alloc.intl_equity || 0.16) * 100 },
+        { name: 'US Aggregate (BND)', value: Math.round((alloc.us_bonds || 0.26) * 100) + '%', fill: '#eab308', raw: (alloc.us_bonds || 0.26) * 100 },
+        { name: 'TIPS Protected', value: Math.round((alloc.tips || 0.10) * 100) + '%', fill: '#facc15', raw: (alloc.tips || 0.10) * 100 },
+        { name: 'Ring-Fenced Cash', value: Math.round((alloc.cash || 0.10) * 100) + '%', fill: '#f472b6', raw: (alloc.cash || 0.10) * 100 },
+        { name: 'Alternatives', value: Math.round((alloc.alternatives || 0.04) * 100) + '%', fill: '#ec4899', raw: (alloc.alternatives || 0.04) * 100 }
+      ];
+      document.getElementById('allocation-chips-grid').innerHTML = chipsData.map(item => `
+        <div class="p-3 glass-card rounded-xl flex items-center gap-3">
+          <span class="w-3 h-3 rounded-full shrink-0 shadow-sm border border-yellow-400" style="background-color: ${item.fill}"></span>
+          <div>
+            <p class="text-xs text-violet-900 font-bold truncate">${item.name.split(' ')[0]}</p>
+            <p class="text-sm font-black font-mono text-violet-950">${item.value}</p>
+          </div>
+        </div>
+      `).join('');
+
+      // Donut gradient
+      let acc = 0;
+      const stops = chipsData.map(c => {
+        const start = acc;
+        acc += c.raw;
+        return `${c.fill} ${start.toFixed(1)}% ${acc.toFixed(1)}%`;
+      }).join(', ');
+      const donutEl = document.getElementById('mc-donut-ring');
+      if (donutEl) donutEl.style.background = `conic-gradient(${stops})`;
+      const donutSum = document.getElementById('mc-donut-summary');
+      if (donutSum) donutSum.innerText = `${Math.round(sim.equity_weight * 100)}% Growth Equities · ${Math.round(sim.bond_weight * 100)}% Defensives & T-Bills`;
+
+      // Dynamic SVG Fan Chart
+      const svg = document.getElementById('mc-fan-svg');
+      const traj = sim.trajectory_percentiles || [];
+      if (svg && traj.length > 0) {
+        const target = state.activeGoal.target_valuation || 150000;
+        const maxVal = Math.max(target * 1.25, ...traj.map(r => r.p90 || r.median || 0), 1000);
+        const minVal = 0;
+        const x0 = 75, x1 = 775, yTop = 35, yBot = 275;
+        const toX = (i) => traj.length === 1 ? x0 : x0 + (i / (traj.length - 1)) * (x1 - x0);
+        const toY = (v) => yBot - ((v - minVal) / (maxVal - minVal)) * (yBot - yTop);
+
+        const p90Pts = traj.map((r, i) => `${toX(i).toFixed(1)},${toY(r.p90).toFixed(1)}`);
+        const p50Pts = traj.map((r, i) => `${toX(i).toFixed(1)},${toY(r.median ?? r.p50 ?? 0).toFixed(1)}`);
+        const p10Pts = traj.map((r, i) => `${toX(i).toFixed(1)},${toY(r.p10).toFixed(1)}`);
+
+        const yTarget = toY(target).toFixed(1);
+        const yLabels = [0, 0.25, 0.5, 0.75, 1].map(frac => {
+          const val = maxVal * frac;
+          const y = toY(val);
+          const lbl = val >= 1e6 ? `$${(val / 1e6).toFixed(1)}M` : `$${Math.round(val / 1000)}k`;
+          return `
+            <line x1="${x0}" y1="${y.toFixed(1)}" x2="${x1}" y2="${y.toFixed(1)}" stroke="rgba(234,179,8,0.28)" stroke-dasharray="4 4"/>
+            <text x="${x0 - 10}" y="${(y + 4).toFixed(1)}" fill="#2e1065" font-size="11" text-anchor="end" font-family="monospace" font-weight="800">${lbl}</text>
+          `;
+        }).join('');
+
+        const step = Math.max(1, Math.floor((traj.length - 1) / 4));
+        const xTicks = traj.filter((_, i) => i % step === 0 || i === traj.length - 1).map(r => {
+          const idx = traj.indexOf(r);
+          return `<text x="${toX(idx).toFixed(1)}" y="302" fill="#2e1065" font-size="11" text-anchor="middle" font-family="monospace" font-weight="800">Yr ${r.year}</text>`;
+        }).join('');
+
+        svg.innerHTML = `
+          <defs>
+            <linearGradient id="p90Grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#facc15" stop-opacity="0.50"/>
+              <stop offset="100%" stop-color="#facc15" stop-opacity="0.04"/>
+            </linearGradient>
+            <linearGradient id="medianGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.08"/>
+            </linearGradient>
+          </defs>
+          ${yLabels}
+          <line x1="${x0}" y1="${yTarget}" x2="${x1}" y2="${yTarget}" stroke="#eab308" stroke-width="2.5" stroke-dasharray="6 4"/>
+          <text x="${x1 - 5}" y="${Math.max(18, Number(yTarget) - 8)}" fill="#a16207" font-size="11" text-anchor="end" font-weight="900" font-family="monospace">Goal Target: ${fmt(target)}</text>
+          <polygon points="${p90Pts.join(' ')} ${x1},${yBot} ${x0},${yBot}" fill="url(#p90Grad)"/>
+          <polyline points="${p90Pts.join(' ')}" fill="none" stroke="#eab308" stroke-width="2.5"/>
+          <polygon points="${p50Pts.join(' ')} ${x1},${yBot} ${x0},${yBot}" fill="url(#medianGrad)"/>
+          <polyline points="${p50Pts.join(' ')}" fill="none" stroke="#5b21b6" stroke-width="3.5"/>
+          <polyline points="${p10Pts.join(' ')}" fill="none" stroke="#9333ea" stroke-width="1.8" stroke-dasharray="4 3"/>
+          ${xTicks}
+        `;
+      }
+
+      renderExplanationBody();
+    }
+
+    function renderPortfolio() {
+      const p = state.portfolio;
+      document.getElementById('port-total-val').innerText = fmt(p.total_valuation);
+      document.getElementById('port-cash-val').innerText = fmt(p.cash_balance);
+      document.getElementById('port-reserve-val').innerText = fmt(p.emergency_reserve);
+      document.getElementById('port-target-ratio').innerText = `${Math.round((p.target_equity_pct || 0.6) * 100)}% / ${Math.round((p.target_bond_pct || 0.4) * 100)}%`;
+      document.getElementById('tab-portfolio-badge').innerText = fmt(p.total_valuation);
+
+      const holdings = p.holdings || [];
+      document.getElementById('holdings-count-badge').innerText = `${holdings.length} Position${holdings.length === 1 ? '' : 's'} Active`;
+      const body = document.getElementById('holdings-table-body');
+      if (holdings.length === 0) {
+        body.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-violet-700 font-sans">No active asset positions yet. Place a Direct Broker Order to invest cash.</td></tr>`;
+      } else {
+        body.innerHTML = holdings.map(h => `
+          <tr class="hover:bg-yellow-50/80 transition-colors">
+            <td class="py-3.5 font-black text-violet-950 font-sans">
+              ${h.symbol}
+              <span class="block text-[11px] font-normal text-violet-800">${h.asset_name || h.symbol}</span>
+            </td>
+            <td class="py-3.5 text-[11px] font-sans font-bold text-violet-800">${(h.asset_class || '').replace('_', ' ')}</td>
+            <td class="py-3.5 text-right text-violet-950">${Number(h.quantity).toFixed(2)}</td>
+            <td class="py-3.5 text-right text-violet-800">${fmtDec(h.cost_basis)}</td>
+            <td class="py-3.5 text-right font-black text-violet-950">${fmtDec(h.current_price)}</td>
+            <td class="py-3.5 text-right font-black text-violet-950">${fmt(h.market_value)}</td>
+            <td class="py-3.5 text-right font-black text-violet-800">${((h.allocation_pct || 0) * 100).toFixed(1)}%</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    function renderLedger() {
+      const txs = state.transactions || [];
+      document.getElementById('tab-ledger-badge').innerText = txs.length;
+      document.getElementById('ledger-count-badge').innerText = `${txs.length} Verified Record${txs.length === 1 ? '' : 's'}`;
+      const list = document.getElementById('ledger-list');
+      if (txs.length === 0) {
+        list.innerHTML = `<div class="py-8 text-center text-violet-700 font-sans">No transactions recorded yet.</div>`;
+        return;
+      }
+      list.innerHTML = txs.map(tx => {
+        const letter = (tx.type || 'T')[0];
+        const badgeCls = tx.type === 'DEPOSIT'
+          ? 'bg-yellow-200 text-violet-950 border-yellow-400'
+          : tx.type === 'WITHDRAWAL' || tx.type === 'SELL'
+          ? 'bg-pink-200 text-pink-900 border-pink-400'
+          : 'bg-violet-200 text-violet-950 border-violet-400';
+        const ts = (tx.timestamp || '').replace('T', ' ').slice(0, 19);
+        return `
+          <div class="py-3.5 flex items-center justify-between hover:bg-yellow-50/60 px-3 rounded-xl transition-colors">
+            <div class="flex items-center gap-3.5">
+              <span class="w-7 h-7 rounded-lg text-[10px] font-black flex items-center justify-center border ${badgeCls}">${letter}</span>
+              <div>
+                <p class="font-bold text-violet-950 font-sans">${tx.type}${tx.symbol ? ' · ' + tx.symbol : ''}</p>
+                <p class="text-[11px] text-violet-700 font-sans font-medium">${tx.plain_english_note || 'Confirmed Ledger Event'}</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="font-black text-violet-950">${fmt(tx.amount)}</p>
+              <p class="text-[10px] text-violet-600 font-semibold">${ts}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderRebalance() {
+      const r = state.rebalance;
+      const ordersEl = document.getElementById('reb-orders-list');
+      if (!r) {
+        ordersEl.innerHTML = `<div class="p-5 rounded-xl glass-card text-xs text-violet-800 font-semibold text-center">Click <strong>Preview Drift</strong> to evaluate current holdings against your strategic weights.</div>`;
+        return;
+      }
+      document.getElementById('reb-explanation-text').innerText = r.plain_english_explanation || '';
+      document.getElementById('reb-drift-val').innerText = ((r.drift_detected || 0) * 100).toFixed(1) + '%';
+      document.getElementById('reb-target-eq').innerText = ((r.target_allocation?.equity || 0.6) * 100).toFixed(1) + '%';
+      document.getElementById('reb-target-fi').innerText = ((r.target_allocation?.fixed_income || 0.4) * 100).toFixed(1) + '%';
+      document.getElementById('reb-status-val').innerText = (r.status || 'preview').toUpperCase();
+
+      const orders = r.orders || [];
+      if (orders.length === 0) {
+        ordersEl.innerHTML = `<div class="p-4 rounded-xl glass-card text-xs text-violet-900 font-bold text-center">Portfolio is within target drift tolerance. No rebalance trades required.</div>`;
+      } else {
+        ordersEl.innerHTML = orders.map(o => `
+          <div class="p-4 rounded-xl glass-card border-2 border-yellow-400/80 flex items-center justify-between">
+            <div class="flex items-center gap-3.5">
+              <span class="text-[10px] font-black font-mono px-2.5 py-1 rounded-md border ${
+                o.side === 'SELL' ? 'bg-pink-100 text-pink-900 border-pink-400' : 'bg-yellow-200 text-violet-950 border-yellow-400'
+              }">${o.side}</span>
+              <div>
+                <p class="text-xs font-bold text-violet-950">${o.quantity} shares of ${o.symbol} (${o.asset_name})</p>
+                <p class="text-[11px] text-violet-800 mt-0.5 font-medium">${o.plain_english_reason}</p>
+              </div>
+            </div>
+            <div class="text-right font-mono">
+              <p class="text-xs font-black text-violet-950">${fmtDec(o.estimated_total)}</p>
+              <p class="text-[10px] text-violet-700 font-bold">@ ${fmtDec(o.estimated_price)}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function updateUserUI() {
+      const u = state.user;
+      document.getElementById('user-display-name').innerText = u ? (u.display_name || u.email) : 'Sign In';
+      document.getElementById('user-role-label').innerText = u ? (u.role || 'Investor') : (state.backendOnline ? 'Guest Mode' : 'Local Preview');
+      document.getElementById('user-avatar-initial').innerText = u ? (u.display_name || u.email || 'I')[0].toUpperCase() : '?';
+
+      const signedInPanel = document.getElementById('auth-signed-in-panel');
+      const authForm = document.getElementById('auth-form');
+      const pill = document.getElementById('auth-conn-pill');
+      pill.innerText = state.backendOnline ? 'API CONNECTED' : 'LOCAL FALLBACK';
+
+      if (u) {
+        signedInPanel.classList.remove('hidden');
+        authForm.classList.add('hidden');
+        document.getElementById('auth-active-name').innerText = u.display_name || u.email;
+        document.getElementById('auth-active-email').innerText = u.email;
+        document.getElementById('auth-active-role').innerText = `Role: ${u.role || 'user'}`;
+      } else {
+        signedInPanel.classList.add('hidden');
+        authForm.classList.remove('hidden');
+      }
+    }
+
+    async function loadUserPortfolioData() {
+      if (!state.backendOnline || !state.token) return;
+      try {
+        let list = await apiRequest('/api/v1/portfolios');
+        if (!list || list.length === 0) {
+          const created = await apiRequest('/api/v1/portfolios', {
+            method: 'POST',
+            body: JSON.stringify({
+              name: `${state.user?.display_name || 'Primary'} Goal Portfolio`,
+              initial_deposit: 100000,
+              emergency_reserve: state.activeGoal.guaranteed_reserve || 25000,
+              target_equity_pct: 0.60
+            })
+          });
+          state.portfolio = created;
+        } else {
+          state.portfolio = await apiRequest(`/api/v1/portfolios/${list[0].id}`);
+        }
+        state.transactions = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/transactions`);
+        renderPortfolio();
+        renderLedger();
+      } catch (err) {
+        console.warn('Portfolio sync warning:', err.message);
+      }
+    }
+
+    async function selectGoal(idx) {
+      state.selectedIdx = idx;
+      state.activeGoal = { ...state.presets[idx] };
+      renderPresets();
+      renderGoalDetails();
+      await runSimulationForGoal(state.activeGoal);
+      showToast('Loaded & simulated goal: ' + state.activeGoal.primary_objective);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('tab-content-' + tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = 'tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap text-violet-800 hover:text-violet-950 hover:bg-yellow-100/60';
+      });
+      document.getElementById('tab-btn-' + tabId).className = 'tab-btn flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap glass-card-active text-violet-950 shadow-md border-2 border-yellow-500';
+
+      if (tabId === 'rebalance' && state.backendOnline && state.portfolio?.id && !state.rebalance) {
+        runRebalance(false);
+      }
+    }
+
+    function toggleQuantMode() {
+      state.isQuant = !state.isQuant;
+      const btn = document.getElementById('toggle-quant-btn');
+      const label = document.getElementById('quant-mode-label');
+      const heading = document.getElementById('explanation-heading');
+      if (state.isQuant) {
+        btn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold border-2 border-yellow-400 transition-all bg-yellow-200 text-violet-950 shadow-sm';
+        label.innerText = 'Institutional Quant';
+        heading.innerText = 'Quantitative Risk & Return Parameters';
+      } else {
+        btn.className = 'flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold border-2 border-yellow-400 transition-all bg-white/80 text-violet-950 hover:bg-yellow-50 shadow-sm';
+        label.innerText = 'Executive View';
+        heading.innerText = 'Fiduciary Executive Summary';
+      }
+      renderExplanationBody();
+    }
+
+    async function compileIntentAction() {
+      const rawText = (document.getElementById('custom-prompt-input').value || '').trim();
+      if (rawText.length < 8) {
+        showToast('Please enter at least 8 characters describing your financial goal.');
+        return;
+      }
+      if (state.backendOnline) {
+        try {
+          const res = await apiRequest('/api/v1/intent/compile', {
+            method: 'POST',
+            body: JSON.stringify({ raw_text: rawText, save_goal: !!state.token })
+          });
+          state.activeGoal = res.ast;
+          renderGoalDetails();
+          await runSimulationForGoal(state.activeGoal);
+          showToast(res.saved_to_db ? 'Intent compiled via API & persisted to database.' : 'Natural language goal compiled via API.');
+          return;
+        } catch (err) {
+          showToast('Compile error: ' + err.message);
+          return;
+        }
+      }
+      state.activeGoal = { ...state.activeGoal, raw_text: rawText };
+      renderGoalDetails();
+      await runSimulationForGoal(state.activeGoal);
+      showToast('Natural language goal compiled locally (backend offline).');
+    }
+
+    function copyAST() {
+      navigator.clipboard.writeText(JSON.stringify(state.activeGoal, null, 2));
+      const btn = document.getElementById('copy-ast-btn');
+      btn.innerText = 'Copied!';
+      btn.classList.add('text-violet-950', 'font-black');
+      setTimeout(() => {
+        btn.innerText = 'Copy AST';
+        btn.classList.remove('font-black');
+      }, 2000);
+    }
+
+    function setCashRail(rail) {
+      state.cashRail = rail;
+      const ppBtn = document.getElementById('cash-rail-paypal');
+      const dirBtn = document.getElementById('cash-rail-direct');
+      const emailWrap = document.getElementById('cash-paypal-email-wrap');
+      const confirmBtn = document.getElementById('cash-confirm-btn');
+      if (rail === 'paypal') {
+        ppBtn.className = 'py-2 rounded-xl text-xs font-black gradient-violet text-yellow-300 border-2 border-yellow-400 shadow-sm';
+        dirBtn.className = 'py-2 rounded-xl text-xs font-black glass-pill text-violet-950 hover:bg-yellow-100';
+        confirmBtn.innerText = state.activeCashAction === 'deposit' ? 'Pay via PayPal' : 'Payout via PayPal';
+        emailWrap.classList.toggle('hidden', state.activeCashAction !== 'withdraw');
+      } else {
+        dirBtn.className = 'py-2 rounded-xl text-xs font-black gradient-violet text-yellow-300 border-2 border-yellow-400 shadow-sm';
+        ppBtn.className = 'py-2 rounded-xl text-xs font-black glass-pill text-violet-950 hover:bg-yellow-100';
+        confirmBtn.innerText = 'Confirm';
+        emailWrap.classList.add('hidden');
+      }
+    }
+
+    function openCashModal(action) {
+      state.activeCashAction = action;
+      document.getElementById('cash-modal-title').innerText = action + ' Cash';
+      document.getElementById('cash-modal-desc').innerText = action === 'deposit'
+        ? 'Fund your portfolio via PayPal Orders v2 or direct ledger credit.'
+        : 'Protected emergency reserve of ' + fmt(state.portfolio.emergency_reserve) + ' must remain untouched.';
+      setCashRail(state.cashRail || 'paypal');
+      openModal('cash');
+    }
+
+    function setCashPreset(val) {
+      document.getElementById('cash-modal-amount').value = val;
+    }
+
+    async function confirmCashAction() {
+      const amt = parseFloat(document.getElementById('cash-modal-amount').value);
+      if (!amt || amt <= 0) return;
+
+      if (state.backendOnline && state.portfolio?.id && state.token) {
+        try {
+          if (state.cashRail === 'paypal') {
+            if (state.activeCashAction === 'deposit') {
+              const res = await apiRequest('/api/v1/agent/execute-paypal', {
+                method: 'POST',
+                body: JSON.stringify({
+                  action_type: 'PAYPAL_FUNDING',
+                  portfolio_id: state.portfolio.id,
+                  amount: amt,
+                  goal_id: state.activeGoal.goal_id,
+                  ai_rationale: 'Direct Portfolio PayPal Deposit'
+                })
+              });
+              if (res.executed && res.paypal_result?.portfolio) {
+                state.portfolio = res.paypal_result.portfolio;
+                state.transactions = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/transactions`);
+                await loadPayPalRecords();
+                renderPortfolio();
+                renderLedger();
+                closeModal('cash');
+                showToast(`PayPal Order ${res.paypal_result.paypal_order_id} captured for ${fmt(amt)}!`);
+              } else if (res.paypal_result?.paypal_order_id) {
+                state.pendingPayPalOrder = res.paypal_result;
+                closeModal('cash');
+                switchTab('copilot');
+                renderPendingOrder();
+                showToast(`PayPal Order ${res.paypal_result.paypal_order_id} created — approve & capture in PayPal AI Copilot tab.`);
+              }
+              return;
+            } else {
+              const recipient = document.getElementById('cash-paypal-email').value.trim();
+              const res = await apiRequest('/api/v1/paypal/payouts/create', {
+                method: 'POST',
+                body: JSON.stringify({
+                  portfolio_id: state.portfolio.id,
+                  recipient_email: recipient,
+                  amount: amt,
+                  goal_id: state.activeGoal.goal_id
+                })
+              });
+              state.portfolio = res.portfolio;
+              state.transactions = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/transactions`);
+              await loadPayPalRecords();
+              renderPortfolio();
+              renderLedger();
+              closeModal('cash');
+              showToast(`PayPal Payout ${res.paypal_payout_batch_id} sent (${fmt(amt)} to ${recipient}).`);
+              return;
+            }
+          }
+
+          const ep = state.activeCashAction === 'deposit' ? 'deposit' : 'withdraw';
+          const updated = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/${ep}`, {
+            method: 'POST',
+            body: JSON.stringify({ amount: amt })
+          });
+          state.portfolio = updated;
+          state.transactions = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/transactions`);
+          renderPortfolio();
+          renderLedger();
+          closeModal('cash');
+          showToast(`Successfully processed ${state.activeCashAction} of ${fmt(amt)} via API.`);
+          return;
+        } catch (err) {
+          alert(err.message);
+          return;
+        }
+      }
+
+      if (state.activeCashAction === 'withdraw' && (state.portfolio.cash_balance - amt < state.portfolio.emergency_reserve)) {
+        alert('Withdrawal blocked! Fiduciary safeguard: emergency reserve of ' + fmt(state.portfolio.emergency_reserve) + ' must be maintained.');
+        return;
+      }
+      if (state.activeCashAction === 'deposit') {
+        state.portfolio.cash_balance += amt;
+        state.portfolio.total_valuation += amt;
+      } else {
+        state.portfolio.cash_balance -= amt;
+        state.portfolio.total_valuation -= amt;
+      }
+      renderPortfolio();
+      closeModal('cash');
+      showToast('Successfully processed ' + state.activeCashAction + ' of ' + fmt(amt));
+    }
+
+    function setTradeSide(side) {
+      state.tradeSide = side;
+      const buyBtn = document.getElementById('trade-side-buy');
+      const sellBtn = document.getElementById('trade-side-sell');
+      if (side === 'BUY') {
+        buyBtn.className = 'py-2 rounded-xl text-xs font-black gradient-violet text-yellow-300 border-2 border-yellow-400 shadow-sm';
+        sellBtn.className = 'py-2 rounded-xl text-xs font-black glass-pill text-violet-950 hover:bg-yellow-100';
+      } else {
+        sellBtn.className = 'py-2 rounded-xl text-xs font-black bg-pink-200 text-pink-950 border-2 border-yellow-400 shadow-sm';
+        buyBtn.className = 'py-2 rounded-xl text-xs font-black glass-pill text-violet-950 hover:bg-yellow-100';
+      }
+    }
+
+    function updateTradeEstimate() {
+      const sym = document.getElementById('trade-symbol-select').value;
+      const qty = parseFloat(document.getElementById('trade-shares-input').value) || 0;
+      const quote = state.universeQuotes.find(q => q.symbol === sym);
+      const price = quote ? quote.price : (FALLBACK_PRICES[sym] || 100);
+      document.getElementById('trade-est-total').innerText = fmtDec(qty * price);
+    }
+
+    async function submitTradeOrder() {
+      const symbol = document.getElementById('trade-symbol-select').value;
+      const quantity = parseFloat(document.getElementById('trade-shares-input').value);
+      if (!quantity || quantity <= 0) return;
+
+      if (state.backendOnline && state.portfolio?.id && state.token) {
+        try {
+          const order = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/trade`, {
+            method: 'POST',
+            body: JSON.stringify({ symbol, side: state.tradeSide, quantity, order_type: 'MARKET' })
+          });
+          if (order.status === 'REJECTED') {
+            alert(order.plain_english_status || 'Order rejected by broker.');
+            return;
+          }
+          state.portfolio = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}`);
+          state.transactions = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/transactions`);
+          renderPortfolio();
+          renderLedger();
+          closeModal('trade');
+          showToast(`${order.side} ${order.quantity} ${order.symbol} @ ${fmtDec(order.executed_price)} (${order.status})`);
+          return;
+        } catch (err) {
+          alert('Order error: ' + err.message);
+          return;
+        }
+      }
+
+      closeModal('trade');
+      showToast('Simulated order filled locally (backend offline).');
+    }
+
+    async function runRebalance(autoExecute) {
+      if (state.backendOnline && state.portfolio?.id && state.token) {
+        try {
+          const res = await apiRequest('/api/v1/rebalance/execute', {
+            method: 'POST',
+            body: JSON.stringify({
+              portfolio_id: state.portfolio.id,
+              goal_id: state.activeGoal.goal_id,
+              auto_execute: !!autoExecute,
+              threshold_pct: 0.02
+            })
+          });
+          state.rebalance = res;
+          renderRebalance();
+          if (autoExecute) {
+            state.portfolio = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}`);
+            state.transactions = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/transactions`);
+            renderPortfolio();
+            renderLedger();
+            showToast('Rebalance trades executed & persisted to database.');
+          } else {
+            showToast('Live drift evaluation completed.');
+          }
+          return;
+        } catch (err) {
+          showToast('Rebalance error: ' + err.message);
+          return;
+        }
+      }
+      showToast(autoExecute ? 'Rebalance preview executed locally (backend offline).' : 'Local rebalance preview ready.');
+    }
+
+    function setCopilotPrompt(txt) {
+      document.getElementById('copilot-prompt-input').value = txt;
+      planAgentAction();
+    }
+
+    async function loadPayPalRecords() {
+      if (!state.backendOnline || !state.token) return;
+      try {
+        const records = await apiRequest('/api/v1/paypal/records');
+        state.paypalRecords = Array.isArray(records) ? records : [];
+        renderPayPalRecords();
+      } catch {}
+    }
+
+    function renderPayPalRecords() {
+      const list = document.getElementById('paypal-records-list');
+      const countBadge = document.getElementById('paypal-records-count');
+      if (!list || !countBadge) return;
+      countBadge.innerText = state.paypalRecords.length;
+      if (state.paypalRecords.length === 0) {
+        list.innerHTML = `<p class="text-violet-700 font-sans text-center py-4">No PayPal settlements yet. Execute an order or payout above.</p>`;
+        return;
+      }
+      list.innerHTML = state.paypalRecords.map(r => {
+        const refId = r.paypal_capture_id || r.paypal_order_id || r.paypal_payout_batch_id || r.id.slice(0, 8);
+        const badge = r.status === 'COMPLETED' || r.status === 'SUCCESS'
+          ? 'bg-yellow-200 text-violet-950 border-yellow-400'
+          : 'bg-pink-100 text-pink-900 border-pink-400';
+        return `
+          <div class="p-3 rounded-xl glass-card flex items-center justify-between gap-2">
+            <div>
+              <p class="font-black text-violet-950">${r.payment_type} · ${fmtDec(r.amount)}</p>
+              <p class="text-[10px] text-violet-700 font-bold">${refId} · ${r.mode}</p>
+            </div>
+            <span class="text-[10px] font-black px-2 py-0.5 rounded-full border ${badge}">${r.status}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderPendingOrder() {
+      const box = document.getElementById('copilot-pending-box');
+      if (!box) return;
+      if (!state.pendingPayPalOrder) {
+        box.classList.add('hidden');
+        return;
+      }
+      box.classList.remove('hidden');
+      document.getElementById('copilot-pending-id').innerText = state.pendingPayPalOrder.paypal_order_id;
+      const link = document.getElementById('copilot-approve-link');
+      link.href = state.pendingPayPalOrder.approval_url || 'https://www.sandbox.paypal.com';
+    }
+
+    async function planAgentAction() {
+      const prompt = (document.getElementById('copilot-prompt-input').value || '').trim();
+      if (!prompt) return;
+
+      let plan = null;
+      if (state.backendOnline && state.portfolio?.id && state.token) {
+        try {
+          plan = await apiRequest('/api/v1/agent/plan', {
+            method: 'POST',
+            body: JSON.stringify({
+              prompt,
+              portfolio_id: state.portfolio.id,
+              goal: state.activeGoal
+            })
+          });
+        } catch (err) {
+          showToast('Agent plan error: ' + err.message);
+          return;
+        }
+      } else {
+        // Local fallback preview
+        const isPayout = /payout|withdraw|disburse/i.test(prompt);
+        const amt = isPayout ? 2000 : 5000;
+        plan = {
+          ai_provider: 'local_preview',
+          action_type: isPayout ? 'PAYPAL_PAYOUT' : 'PAYPAL_FUNDING',
+          tool_call: {
+            name: isPayout ? 'initiate_paypal_payout' : 'create_paypal_funding_order',
+            arguments: isPayout
+              ? { recipient_email: 'demo-buyer@personal.example.com', amount: amt }
+              : { amount: amt, goal_id: state.activeGoal.goal_id }
+          },
+          safeguard_passed: true,
+          safeguard_note: `Emergency reserve of ${fmt(state.portfolio.emergency_reserve)} remains 100% protected.`,
+          reasoning: isPayout
+            ? `Verified withdrawable cash above emergency reserve. Prepared PayPal Payout of ${fmt(amt)}.`
+            : `Evaluated goal readiness for ${state.activeGoal.primary_objective}. Prepared PayPal Orders v2 funding of ${fmt(amt)}.`,
+          expected_impact: 'Updates liquidity and audit ledger upon PayPal authorization.'
+        };
+      }
+
+      state.agentPlan = plan;
+      document.getElementById('copilot-reasoning-text').innerText = plan.reasoning;
+      document.getElementById('copilot-safeguard-note').innerText = plan.safeguard_note;
+      document.getElementById('copilot-impact-note').innerText = plan.expected_impact || '';
+      document.getElementById('copilot-safeguard-pill').innerText = plan.safeguard_passed ? 'RESERVE VERIFIED' : 'CAPPED BY RESERVE';
+      document.getElementById('copilot-tool-name').innerText = plan.tool_call?.name || '';
+      document.getElementById('copilot-tool-json').innerText = JSON.stringify(plan.tool_call, null, 2);
+      document.getElementById('copilot-action-type-badge').innerText = plan.action_type;
+
+      const emailWrap = document.getElementById('copilot-email-wrap');
+      const amtInput = document.getElementById('copilot-exec-amount');
+      const execBtn = document.getElementById('copilot-exec-btn');
+
+      if (plan.action_type === 'PAYPAL_PAYOUT') {
+        emailWrap.classList.remove('hidden');
+        amtInput.value = plan.tool_call?.arguments?.amount ?? 2000;
+        document.getElementById('copilot-exec-email').value = plan.tool_call?.arguments?.recipient_email || 'demo-buyer@personal.example.com';
+        execBtn.innerText = 'Authorize PayPal Payout';
+      } else if (plan.action_type === 'REBALANCE') {
+        emailWrap.classList.add('hidden');
+        amtInput.value = 0;
+        execBtn.innerText = 'Authorize Portfolio Rebalance';
+      } else {
+        emailWrap.classList.add('hidden');
+        amtInput.value = plan.tool_call?.arguments?.amount ?? 5000;
+        execBtn.innerText = 'Authorize & Execute via PayPal';
+      }
+      showToast('AI Copilot generated PayPal action plan.');
+    }
+
+    async function executeCopilotAction() {
+      const actionType = state.agentPlan?.action_type || 'PAYPAL_FUNDING';
+      if (actionType === 'REBALANCE') {
+        await runRebalance(true);
+        switchTab('rebalance');
+        return;
+      }
+
+      const amount = parseFloat(document.getElementById('copilot-exec-amount').value);
+      if (!amount || amount <= 0) {
+        alert('Enter a valid settlement amount.');
+        return;
+      }
+
+      if (!state.backendOnline || !state.portfolio?.id || !state.token) {
+        if (actionType === 'PAYPAL_FUNDING') {
+          state.portfolio.cash_balance += amount;
+          state.portfolio.total_valuation += amount;
+        } else {
+          if (state.portfolio.cash_balance - amount < state.portfolio.emergency_reserve) {
+            alert('Payout blocked by fiduciary emergency reserve safeguard!');
+            return;
+          }
+          state.portfolio.cash_balance -= amount;
+          state.portfolio.total_valuation -= amount;
+        }
+        state.paypalRecords.unshift({
+          id: 'SIM-' + Date.now(),
+          payment_type: actionType === 'PAYPAL_FUNDING' ? 'DEPOSIT_ORDER' : 'PAYOUT',
+          paypal_order_id: 'PP-LOCAL-' + Math.floor(Math.random() * 90000 + 10000),
+          amount,
+          status: 'COMPLETED',
+          mode: 'local_preview'
+        });
+        renderPortfolio();
+        renderPayPalRecords();
+        showToast(`Local PayPal simulation processed ${fmt(amount)}.`);
+        return;
+      }
+
+      try {
+        const recipientEmail = document.getElementById('copilot-exec-email').value.trim();
+        const res = await apiRequest('/api/v1/agent/execute-paypal', {
+          method: 'POST',
+          body: JSON.stringify({
+            action_type: actionType,
+            portfolio_id: state.portfolio.id,
+            amount,
+            goal_id: state.activeGoal.goal_id,
+            recipient_email: recipientEmail || 'demo-buyer@personal.example.com',
+            ai_rationale: state.agentPlan?.reasoning || 'PayPal AI Copilot Settlement'
+          })
+        });
+
+        if (res.executed && res.paypal_result?.portfolio) {
+          state.portfolio = res.paypal_result.portfolio;
+          state.transactions = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/transactions`);
+          state.pendingPayPalOrder = null;
+          renderPendingOrder();
+          renderPortfolio();
+          renderLedger();
+          await loadPayPalRecords();
+          const ref = res.paypal_result.paypal_capture_id || res.paypal_result.paypal_payout_batch_id || res.paypal_result.paypal_order_id;
+          showToast(`PayPal settled (${ref}) for ${fmt(amount)}!`);
+        } else if (res.flow === 'awaiting_paypal_approval' && res.paypal_result) {
+          state.pendingPayPalOrder = res.paypal_result;
+          renderPendingOrder();
+          await loadPayPalRecords();
+          showToast(`PayPal Sandbox Order ${res.paypal_result.paypal_order_id} created. Approve in PayPal Checkout and click Capture.`);
+        }
+      } catch (err) {
+        alert('PayPal execution error: ' + err.message);
+      }
+    }
+
+    async function capturePendingOrder() {
+      if (!state.pendingPayPalOrder?.paypal_order_id) return;
+      try {
+        const res = await apiRequest(`/api/v1/paypal/orders/${state.pendingPayPalOrder.paypal_order_id}/capture`, {
+          method: 'POST'
+        });
+        state.portfolio = res.portfolio;
+        state.transactions = await apiRequest(`/api/v1/portfolios/${state.portfolio.id}/transactions`);
+        state.pendingPayPalOrder = null;
+        renderPendingOrder();
+        renderPortfolio();
+        renderLedger();
+        await loadPayPalRecords();
+        showToast(`Captured PayPal Order ${res.paypal_order_id} (${fmt(res.amount)})!`);
+      } catch (err) {
+        alert('Capture failed (ensure you approved the Sandbox Checkout URL first): ' + err.message);
+      }
+    }
+
+    function setAuthMode(mode) {
+      state.authMode = mode;
+      const loginBtn = document.getElementById('auth-tab-login');
+      const regBtn = document.getElementById('auth-tab-register');
+      const nameWrap = document.getElementById('auth-name-wrap');
+      const submitBtn = document.getElementById('auth-submit-btn');
+      if (mode === 'login') {
+        loginBtn.className = 'py-1.5 rounded-xl text-xs font-black gradient-violet text-yellow-300 border border-yellow-400';
+        regBtn.className = 'py-1.5 rounded-xl text-xs font-black glass-pill text-violet-950';
+        nameWrap.classList.add('hidden');
+        submitBtn.innerText = 'Sign In';
+      } else {
+        regBtn.className = 'py-1.5 rounded-xl text-xs font-black gradient-violet text-yellow-300 border border-yellow-400';
+        loginBtn.className = 'py-1.5 rounded-xl text-xs font-black glass-pill text-violet-950';
+        nameWrap.classList.remove('hidden');
+        submitBtn.innerText = 'Create Account';
+      }
+    }
+
+    async function submitAuthForm(e) {
+      e.preventDefault();
+      if (!state.backendOnline) {
+        showToast('Backend API is offline on port 8000; running in local preview mode.');
+        return;
+      }
+      const email = document.getElementById('auth-email-input').value.trim();
+      const password = document.getElementById('auth-password-input').value;
+      const displayName = document.getElementById('auth-name-input').value.trim();
+      try {
+        const ep = state.authMode === 'login' ? '/api/v1/auth/login' : '/api/v1/auth/register';
+        const body = state.authMode === 'login' ? { email, password } : { email, password, display_name: displayName || email.split('@')[0] };
+        const res = await apiRequest(ep, { method: 'POST', body: JSON.stringify(body) });
+        setToken(res.access_token);
+        state.user = res.user;
+        updateUserUI();
+        closeModal('auth');
+        await loadUserPortfolioData();
+        await loadPayPalRecords();
+        showToast('Authenticated as ' + (state.user.display_name || state.user.email));
+      } catch (err) {
+        alert('Authentication failed: ' + err.message);
+      }
+    }
+
+    function logoutSession() {
+      setToken(null);
+      state.user = null;
+      state.rebalance = null;
+      state.paypalRecords = [];
+      updateUserUI();
+      renderPayPalRecords();
+      closeModal('auth');
+      showToast('Signed out of session.');
+    }
+
+    function openModal(id) {
+      if (id === 'trade') updateTradeEstimate();
+      document.getElementById(id + '-modal').classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id + '-modal').classList.add('hidden');
+    }
+
+    function showToast(msg) {
+      const banner = document.getElementById('toast-banner');
+      document.getElementById('toast-text').innerText = msg;
+      banner.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(hideToast, 4000);
+    }
+
+    function hideToast() {
+      document.getElementById('toast-banner').classList.add('hidden');
+    }
+
+    async function initDashboard() {
+      // Initial optimistic local render
+      renderTicker();
+      renderPresets();
+      renderGoalDetails();
+      state.sim = localMonteCarlo(state.activeGoal);
+      renderSimulation();
+      renderPortfolio();
+      renderLedger();
+      renderRebalance();
+      renderPayPalRecords();
+
+      // Connect to FastAPI backend
+      try {
+        const health = await apiRequest('/api/v1/health');
+        state.backendOnline = true;
+        state.paypalMode = health.paypal_mode || 'sandbox_simulation';
+        state.aiProvider = health.ai_provider || 'deterministic_quant_engine';
+        const ppBadge = document.getElementById('copilot-pp-badge');
+        const aiBadge = document.getElementById('copilot-ai-badge');
+        if (ppBadge) ppBadge.innerText = state.paypalMode === 'sandbox_live' ? 'PAYPAL SANDBOX LIVE' : 'PAYPAL SANDBOX SIM';
+        if (aiBadge) aiBadge.innerText = state.aiProvider.toUpperCase().replace(/_/g, ' ');
+        document.getElementById('live-status-dot').className = 'w-2 h-2 rounded-full bg-violet-600 animate-ping';
+
+        // Load seeds & market universe in parallel
+        const [seeds, quotes] = await Promise.all([
+          apiRequest('/api/v1/intent/seeds').catch(() => null),
+          apiRequest('/api/v1/market/universe').catch(() => null)
+        ]);
+        if (Array.isArray(seeds) && seeds.length > 0) {
+          state.presets = seeds;
+          state.activeGoal = { ...seeds[0] };
+          renderPresets();
+          renderGoalDetails();
+        }
+        if (Array.isArray(quotes) && quotes.length > 0) {
+          state.universeQuotes = quotes;
+          renderTicker();
+        }
+
+        // Restore or auto-authenticate Demo Investor session
+        const stored = getToken();
+        if (stored) {
+          state.token = stored;
+          try {
+            state.user = await apiRequest('/api/v1/auth/me');
+          } catch {
+            setToken(null);
+          }
+        }
+        if (!state.user) {
+          try {
+            const loginRes = await apiRequest('/api/v1/auth/login', {
+              method: 'POST',
+              body: JSON.stringify({ email: 'demo@gdipca.io', password: 'Demo12345!' })
+            });
+            setToken(loginRes.access_token);
+            state.user = loginRes.user;
+          } catch {}
+        }
+
+        updateUserUI();
+        await Promise.all([
+          runSimulationForGoal(state.activeGoal),
+          loadUserPortfolioData(),
+          loadPayPalRecords()
+        ]);
+      } catch (err) {
+        state.backendOnline = false;
+        document.getElementById('live-status-dot').className = 'w-2 h-2 rounded-full bg-amber-500';
+        updateUserUI();
+      }
+    }
+
+    window.onload = initDashboard;
+  </script>
+</body>
+</html>
